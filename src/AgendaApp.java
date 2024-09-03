@@ -3,21 +3,13 @@ import repository.AgendaRepository;
 import ui.Input;
 import ui.Screen;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class AgendaApp {
 
-    static private AgendaRepository data;
-
-    static final int ID_COLUMN_WIDTH = 2;
-    static final int NAME_COLUMN_WIDTH = 30;
-    static final int PHONE_COLUMN_WIDTH = 20;
-    static final int EMAIL_COLUMN_WIDTH = 30;
-
     public static void main(String[] args) {
 
-        data = new AgendaRepository();
+        AgendaRepository data = new AgendaRepository();
 
         Scanner input = new Scanner(System.in);
 
@@ -66,7 +58,13 @@ public class AgendaApp {
 
                     if (idToDetail.equals("0")) break;
 
-                    detail(idToDetail);
+                    Contact contact = data.read(idToDetail);
+
+                    if (contact != null) {
+                        Screen.showContactDetails(contact);
+                    } else {
+                        System.out.println("Contato não existe!");
+                    }
 
                     System.out.println("Enter para continuar...");
                     input.nextLine();
@@ -93,7 +91,7 @@ public class AgendaApp {
                     break;
                 case 5:
                     System.out.println("═════════════════ Listar contatos ══════════════════");
-                    list();
+                    Screen.showContactList(data.list());
 
                     System.out.println("Enter para continuar...");
                     input.nextLine();
@@ -110,44 +108,5 @@ public class AgendaApp {
             }
         }
         input.close();
-    }
-
-    static void list() {
-        List<Contact> contactList = data.list();
-
-        String format = "| %-" + ID_COLUMN_WIDTH + "s | %-" + NAME_COLUMN_WIDTH + "s |%n";
-
-        System.out.printf(format, "ID", "Nome");
-        System.out.printf("+-%s-+-%s-+%n",
-                "-".repeat(ID_COLUMN_WIDTH),
-                "-".repeat(NAME_COLUMN_WIDTH));
-
-        for (Contact contact : contactList) {
-            System.out.printf(format, contact.getId(), contact.getName());
-        }
-    }
-
-    static void detail(String idParaListar) {
-
-        Contact contact = data.read(idParaListar);
-
-        if (contact != null) {
-            String format = "| %-" + ID_COLUMN_WIDTH + "s | %-" + NAME_COLUMN_WIDTH + "s | %-" + PHONE_COLUMN_WIDTH + "s | %-" + EMAIL_COLUMN_WIDTH + "s %n";
-
-            System.out.printf(format, "ID", "Nome", "Telefone", "Email");
-            System.out.printf("+-%s-+-%s-+-%s-+-%s-+%n",
-                    "-".repeat(ID_COLUMN_WIDTH),
-                    "-".repeat(NAME_COLUMN_WIDTH),
-                    "-".repeat(PHONE_COLUMN_WIDTH),
-                    "-".repeat(EMAIL_COLUMN_WIDTH));
-
-            System.out.printf(format,
-                    contact.getId(),
-                    contact.getName(),
-                    contact.getPhone(),
-                    contact.getEmail());
-        } else {
-            System.out.println("Contact not found!");
-        }
     }
 }
