@@ -1,8 +1,8 @@
 package ui;
 
 public class Screen {
-    public static void exibirMenu(int tamanhoAtual) {
-        String contador = String.format("%04d", tamanhoAtual);
+    public static void showMenu(int currentSize) {
+        String counter = String.format("%04d", currentSize);
 
         System.out.println("""
                 ╔══════════════════════════════════════════════════╗
@@ -23,10 +23,10 @@ public class Screen {
                 ║        [6] - Sobre                               ║
                 ║                                                  ║
                 ║        [9] - Sair                                ║
-                ╚══════════════════════════════ Contatos""" + " " + contador + " ═════╝");
+                ╚══════════════════════════════ Contatos""" + " " + counter + " ═════╝");
     }
 
-    public static void exibirSobre() {
+    public static void showAbout() {
         System.out.println("""
                 ╔══════════════════════════════════════════════════╗
                 ║             _                    _               ║
@@ -51,5 +51,4 @@ public class Screen {
                 ║                                                  ║
                 ╚══════════════════════════════════════════════════╝""");
     }
-
 }

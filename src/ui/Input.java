@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Input {
 
-    public static int obterInt(Scanner scanner, String promptMessage, boolean canBeNegative) {
+    public static int getInt(Scanner scanner, String promptMessage, boolean canBeNegative) {
         while (true) {
             System.out.print(promptMessage);
             try {
@@ -19,7 +19,7 @@ public class Input {
         }
     }
 
-    public static String obterString(Scanner scanner, String promptMessage, boolean canBeEmpty) {
+    public static String getString(Scanner scanner, String promptMessage, boolean canBeEmpty) {
         while (true) {
             System.out.print(promptMessage);
             String value = scanner.nextLine().trim();

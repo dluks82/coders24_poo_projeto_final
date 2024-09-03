@@ -10,10 +10,10 @@ public class AgendaApp {
 
     static private AgendaRepository data;
 
-    static final int COLUNA_ID_WIDTH = 2;
-    static final int COLUNA_NOME_WIDTH = 30;
-    static final int COLUNA_TELEFONE_WIDTH = 20;
-    static final int COLUNA_EMAIL_WIDTH = 30;
+    static final int ID_COLUMN_WIDTH = 2;
+    static final int NAME_COLUMN_WIDTH = 30;
+    static final int PHONE_COLUMN_WIDTH = 20;
+    static final int EMAIL_COLUMN_WIDTH = 30;
 
     public static void main(String[] args) {
 
@@ -23,89 +23,83 @@ public class AgendaApp {
 
         while (true) {
 
-            Screen.exibirMenu(data.size());
+            Screen.showMenu(data.size());
 
-            int opcao = Input.obterInt(input, "Informe a operação desejada: ", false);
+            int userOption = Input.getInt(input, "Informe a operação desejada: ", false);
 
-            if (opcao == 9) break;
+            if (userOption == 9) break;
 
-            switch (opcao) {
+            switch (userOption) {
                 case 1:
-                    // Adicionar
                     System.out.println("═════════════ Adicionar novo contato ═══════════════");
-                    String nome = Input.obterString(input, "Nome: ", false);
-                    String telefone = Input.obterString(input, "Telefone: ", false);
-                    String email = Input.obterString(input, "Email: ", false);
+                    String name = Input.getString(input, "Nome: ", false);
+                    String phone = Input.getString(input, "Telefone: ", false);
+                    String email = Input.getString(input, "Email: ", false);
 
-                    Contact newContact = new Contact(nome, telefone, email);
+                    Contact newContact = new Contact(name, phone, email);
 
-                    boolean adicionado = data.create(newContact);
+                    boolean created = data.create(newContact);
 
-                    String AdicionarMensagem = adicionado ? "Contato adicionado!" : "Falha ao adicionar contato!";
+                    String createdMessage = created ? "Contato adicionado!" : "Falha ao adicionar contato!";
 
-                    System.out.printf("%s Enter para continuar...%n", AdicionarMensagem);
+                    System.out.printf("%s Enter para continuar...%n", createdMessage);
                     input.nextLine();
                     break;
                 case 2:
-                    // Remover
                     System.out.println("═════════════════ Remover contato ══════════════════");
-                    String idParaRemover =
-                            Input.obterString(input, "Id [0 para cancelar]: ", false);
+                    String idToRemove =
+                            Input.getString(input, "Id [0 para cancelar]: ", false);
 
-                    if (idParaRemover.equals("0")) break;
+                    if (idToRemove.equals("0")) break;
 
-                    boolean removido = data.remove(idParaRemover);
+                    boolean removed = data.remove(idToRemove);
 
-                    String mensagem = removido ? "Contato removido!" : "Id não encontrado!";
+                    String removedMessage = removed ? "Contato removido!" : "Id não encontrado!";
 
-                    System.out.printf("%s Enter para continuar...", mensagem);
+                    System.out.printf("%s Enter para continuar...", removedMessage);
                     input.nextLine();
                     break;
                 case 3:
-                    // Detalhar
                     System.out.println("════════════════ Detalhar contato ══════════════════");
-                    String idParaListar =
-                            Input.obterString(input, "Id [0 para cancelar]: ", false);
+                    String idToDetail =
+                            Input.getString(input, "Id [0 para cancelar]: ", false);
 
-                    if (idParaListar.equals("0")) break;
+                    if (idToDetail.equals("0")) break;
 
-                    detalhar(idParaListar);
+                    detail(idToDetail);
 
                     System.out.println("Enter para continuar...");
                     input.nextLine();
                     break;
                 case 4:
-                    // Editar
                     System.out.println("═════════════════ Editar contato ═══════════════════");
-                    String idParaEditar =
-                            Input.obterString(input, "Id [0 para cancelar]: ", false);
+                    String idToEdit =
+                            Input.getString(input, "Id [0 para cancelar]: ", false);
 
-                    if (idParaEditar.equals("0")) break;
+                    if (idToEdit.equals("0")) break;
 
-                    String novoNome = Input.obterString(input, "Novo Nome: ", true);
-                    String novoTelefone = Input.obterString(input, "Novo Telefone: ", true);
-                    String novoEmail = Input.obterString(input, "Novo Email: ", true);
+                    String newName = Input.getString(input, "Novo Nome: ", true);
+                    String newPhone = Input.getString(input, "Novo Telefone: ", true);
+                    String newEmail = Input.getString(input, "Novo Email: ", true);
 
-                    Contact editedContact = new Contact(idParaEditar, novoNome, novoTelefone, novoEmail);
+                    Contact editedContact = new Contact(idToEdit, newName, newPhone, newEmail);
 
-                    boolean editado = data.update(editedContact);
+                    boolean edited = data.update(editedContact);
 
-                    String editMensagem = editado ? "Contato editado!" : "Id não encontrado!";
+                    String editedMessage = edited ? "Contato editado!" : "Id não encontrado!";
 
-                    System.out.printf("%s Enter para continuar...", editMensagem);
+                    System.out.printf("%s Enter para continuar...", editedMessage);
                     input.nextLine();
                     break;
                 case 5:
-                    // Listar
                     System.out.println("═════════════════ Listar contatos ══════════════════");
-                    listar();
+                    list();
 
                     System.out.println("Enter para continuar...");
                     input.nextLine();
                     break;
                 case 6:
-                    // Sobre
-                    Screen.exibirSobre();
+                    Screen.showAbout();
 
                     System.out.println("Enter para continuar...");
                     input.nextLine();
@@ -118,39 +112,39 @@ public class AgendaApp {
         input.close();
     }
 
-    static void listar() {
-        List<Contact> contatos = data.list();
+    static void list() {
+        List<Contact> contactList = data.list();
 
-        String format = "| %-" + COLUNA_ID_WIDTH + "s | %-" + COLUNA_NOME_WIDTH + "s |%n";
+        String format = "| %-" + ID_COLUMN_WIDTH + "s | %-" + NAME_COLUMN_WIDTH + "s |%n";
 
         System.out.printf(format, "ID", "Nome");
         System.out.printf("+-%s-+-%s-+%n",
-                "-".repeat(COLUNA_ID_WIDTH),
-                "-".repeat(COLUNA_NOME_WIDTH));
+                "-".repeat(ID_COLUMN_WIDTH),
+                "-".repeat(NAME_COLUMN_WIDTH));
 
-        for (Contact contact : contatos) {
-            System.out.printf(format, contact.getId(), contact.getNome());
+        for (Contact contact : contactList) {
+            System.out.printf(format, contact.getId(), contact.getName());
         }
     }
 
-    static void detalhar(String idParaListar) {
+    static void detail(String idParaListar) {
 
         Contact contact = data.read(idParaListar);
 
         if (contact != null) {
-            String format = "| %-" + COLUNA_ID_WIDTH + "s | %-" + COLUNA_NOME_WIDTH + "s | %-" + COLUNA_TELEFONE_WIDTH + "s | %-" + COLUNA_EMAIL_WIDTH + "s %n";
+            String format = "| %-" + ID_COLUMN_WIDTH + "s | %-" + NAME_COLUMN_WIDTH + "s | %-" + PHONE_COLUMN_WIDTH + "s | %-" + EMAIL_COLUMN_WIDTH + "s %n";
 
             System.out.printf(format, "ID", "Nome", "Telefone", "Email");
             System.out.printf("+-%s-+-%s-+-%s-+-%s-+%n",
-                    "-".repeat(COLUNA_ID_WIDTH),
-                    "-".repeat(COLUNA_NOME_WIDTH),
-                    "-".repeat(COLUNA_TELEFONE_WIDTH),
-                    "-".repeat(COLUNA_EMAIL_WIDTH));
+                    "-".repeat(ID_COLUMN_WIDTH),
+                    "-".repeat(NAME_COLUMN_WIDTH),
+                    "-".repeat(PHONE_COLUMN_WIDTH),
+                    "-".repeat(EMAIL_COLUMN_WIDTH));
 
             System.out.printf(format,
                     contact.getId(),
-                    contact.getNome(),
-                    contact.getTelefone(),
+                    contact.getName(),
+                    contact.getPhone(),
                     contact.getEmail());
         } else {
             System.out.println("Contact not found!");

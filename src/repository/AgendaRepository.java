@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AgendaRepository {
-    private static List<Contact> contacts = new ArrayList<>();
+    private final static List<Contact> contacts = new ArrayList<>();
 
-    private int proximoId = 1;
+    private int nextId = 1;
 
     public int size() {
         return contacts.size();
@@ -16,33 +16,33 @@ public class AgendaRepository {
 
     public boolean create(Contact contact) {
 
-        if (telefoneOuEmailDuplicado(-1, contact)) return false;
+        if (duplicatePhoneOrEmail(-1, contact)) return false;
 
-        contact.setId(String.valueOf(proximoId));
+        contact.setId(String.valueOf(nextId));
 
         contacts.add(contact);
 
-        proximoId++;
+        nextId++;
 
         return true;
     }
 
     public boolean update(Contact contact) {
-        int index = verificarIdExiste(contact.getId());
+        int index = checkIfIdExists(contact.getId());
         if (index < 0) return false;
 
-        if (telefoneOuEmailDuplicado(Integer.parseInt(contact.getId()), contact)) return false;
+        if (duplicatePhoneOrEmail(Integer.parseInt(contact.getId()), contact)) return false;
 
         Contact old = contacts.get(index);
 
-        if (contact.getNome().trim().isEmpty())
-            contact.setNome(old.getNome());
+        if (contact.getName().trim().isEmpty())
+            contact.setName(old.getName());
 
         if (contact.getEmail().trim().isEmpty())
             contact.setEmail(old.getEmail());
 
-        if (contact.getTelefone().trim().isEmpty())
-            contact.setTelefone(old.getTelefone());
+        if (contact.getPhone().trim().isEmpty())
+            contact.setPhone(old.getPhone());
 
         contacts.set(index, contact);
 
@@ -50,14 +50,14 @@ public class AgendaRepository {
     }
 
     public Contact read(String id) {
-        int index = verificarIdExiste(id);
+        int index = checkIfIdExists(id);
         if (index < 0) return null;
 
         return contacts.get(index);
     }
 
     public boolean remove(String id) {
-        int index = verificarIdExiste(id);
+        int index = checkIfIdExists(id);
         if (index < 0) return false;
 
         contacts.remove(index);
@@ -69,7 +69,7 @@ public class AgendaRepository {
         return contacts;
     }
 
-    private static int verificarIdExiste(String id) {
+    private static int checkIfIdExists(String id) {
         for (int i = 0; i < contacts.size(); i++) {
             if (contacts.get(i).getId().equals(id)) {
                 return i;
@@ -78,12 +78,12 @@ public class AgendaRepository {
         return -1;
     }
 
-    private static int verificarTelefoneExiste(String telefone) {
+    private static int checkIfPhoneExists(String phone) {
         for (int i = 0; i < contacts.size(); i++) {
-            String telefoneItem = contacts.get(i).getTelefone();
-            if (telefoneItem.trim()
+            String phoneItem = contacts.get(i).getPhone();
+            if (phoneItem.trim()
                     .replace(" ", "")
-                    .equals(telefone.trim()
+                    .equals(phone.trim()
                             .replace(" ", ""))) {
                 return i;
             }
@@ -91,7 +91,7 @@ public class AgendaRepository {
         return -1;
     }
 
-    private static int verificarEmailExiste(String email) {
+    private static int checkIfEmailExists(String email) {
         for (int i = 0; i < contacts.size(); i++) {
             String emailItem = contacts.get(i).getEmail();
             if (emailItem.trim().equals(email.trim())) {
@@ -101,20 +101,18 @@ public class AgendaRepository {
         return -1;
     }
 
-    private static boolean telefoneOuEmailDuplicado(int indiceContato, Contact contatoEditado) {
-        int indiceTelefoneDuplicado = verificarTelefoneExiste(contatoEditado.getTelefone());
-        if (indiceTelefoneDuplicado >= 0 && indiceTelefoneDuplicado != indiceContato) {
+    private static boolean duplicatePhoneOrEmail(int contactIndex, Contact editedContact) {
+        int duplicatePhoneIndex = checkIfPhoneExists(editedContact.getPhone());
+        if (duplicatePhoneIndex >= 0 && duplicatePhoneIndex != contactIndex) {
             System.out.println("Telefone já cadastrado!");
             return true;
         }
 
-        int indiceEmailDuplicado = verificarEmailExiste(contatoEditado.getEmail());
-        if (indiceEmailDuplicado >= 0 && indiceEmailDuplicado != indiceContato) {
+        int duplicateEmailIndex = checkIfEmailExists(editedContact.getEmail());
+        if (duplicateEmailIndex >= 0 && duplicateEmailIndex != contactIndex) {
             System.out.println("Email já cadastrado!");
             return true;
         }
-
         return false;
     }
-
 }

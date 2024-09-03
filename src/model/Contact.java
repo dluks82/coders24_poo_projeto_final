@@ -2,20 +2,20 @@ package model;
 
 public class Contact {
     private String id;
-    private String nome;
-    private String telefone;
+    private String name;
+    private String phone;
     private String email;
 
-    public Contact(String nome, String telefone, String email) {
-        this.nome = nome;
-        this.telefone = telefone;
+    public Contact(String name, String phone, String email) {
+        this.name = name;
+        this.phone = phone;
         this.email = email;
     }
 
-    public Contact(String id, String nome, String telefone, String email) {
+    public Contact(String id, String name, String phone, String email) {
         this.id = id;
-        this.nome = nome;
-        this.telefone = telefone;
+        this.name = name;
+        this.phone = phone;
         this.email = email;
     }
 
@@ -27,20 +27,20 @@ public class Contact {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -55,8 +55,8 @@ public class Contact {
     public String toString() {
         return "Contact{" +
                 "id='" + id + '\'' +
-                ", nome='" + nome + '\'' +
-                ", telefone='" + telefone + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
