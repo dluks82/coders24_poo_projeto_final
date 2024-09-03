@@ -1,14 +1,21 @@
 package repository;
 
+import data.DataPersistence;
+import data.DataWrapper;
 import model.Contact;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AgendaRepository {
-    private final static List<Contact> contacts = new ArrayList<>();
+    private final List<Contact> contacts;
 
-    private int nextId = 1;
+    private int nextId;
+
+    public AgendaRepository() {
+        DataWrapper dataWrapper = DataPersistence.load();
+        this.contacts = dataWrapper.contacts();
+        this.nextId = dataWrapper.nextId();
+    }
 
     public int size() {
         return contacts.size();
@@ -24,7 +31,13 @@ public class AgendaRepository {
 
         nextId++;
 
+        saveData();
+
         return true;
+    }
+
+    private void saveData() {
+        DataPersistence.save(new DataWrapper(contacts, nextId));
     }
 
     public boolean update(Contact contact) {
@@ -46,6 +59,8 @@ public class AgendaRepository {
 
         contacts.set(index, contact);
 
+        saveData();
+
         return true;
     }
 
@@ -62,6 +77,8 @@ public class AgendaRepository {
 
         contacts.remove(index);
 
+        saveData();
+
         return true;
     }
 
@@ -69,7 +86,7 @@ public class AgendaRepository {
         return contacts;
     }
 
-    private static int checkIfIdExists(String id) {
+    private int checkIfIdExists(String id) {
         for (int i = 0; i < contacts.size(); i++) {
             if (contacts.get(i).getId().equals(id)) {
                 return i;
@@ -78,7 +95,7 @@ public class AgendaRepository {
         return -1;
     }
 
-    private static int checkIfPhoneExists(String phone) {
+    private int checkIfPhoneExists(String phone) {
         for (int i = 0; i < contacts.size(); i++) {
             String phoneItem = contacts.get(i).getPhone();
             if (phoneItem.trim()
@@ -91,7 +108,7 @@ public class AgendaRepository {
         return -1;
     }
 
-    private static int checkIfEmailExists(String email) {
+    private int checkIfEmailExists(String email) {
         for (int i = 0; i < contacts.size(); i++) {
             String emailItem = contacts.get(i).getEmail();
             if (emailItem.trim().equals(email.trim())) {
@@ -101,7 +118,7 @@ public class AgendaRepository {
         return -1;
     }
 
-    private static boolean duplicatePhoneOrEmail(int contactIndex, Contact editedContact) {
+    private boolean duplicatePhoneOrEmail(int contactIndex, Contact editedContact) {
         int duplicatePhoneIndex = checkIfPhoneExists(editedContact.getPhone());
         if (duplicatePhoneIndex >= 0 && duplicatePhoneIndex != contactIndex) {
             System.out.println("Telefone já cadastrado!");
