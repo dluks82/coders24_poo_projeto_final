@@ -1,6 +1,16 @@
 package ui;
 
+import model.Contact;
+
+import java.util.List;
+
 public class Screen {
+
+    static final int ID_COLUMN_WIDTH = 2;
+    static final int NAME_COLUMN_WIDTH = 30;
+    static final int PHONE_COLUMN_WIDTH = 20;
+    static final int EMAIL_COLUMN_WIDTH = 30;
+
     public static void showMenu(int currentSize) {
         String counter = String.format("%04d", currentSize);
 
@@ -50,5 +60,35 @@ public class Screen {
                 ║      -  Isaque Menezes                           ║
                 ║                                                  ║
                 ╚══════════════════════════════════════════════════╝""");
+    }
+
+    public static void showContactDetails(Contact contact) {
+        String format = "| %-" + ID_COLUMN_WIDTH + "s | %-" + NAME_COLUMN_WIDTH + "s | %-" + PHONE_COLUMN_WIDTH + "s | %-" + EMAIL_COLUMN_WIDTH + "s %n";
+
+        System.out.printf(format, "ID", "Nome", "Telefone", "Email");
+        System.out.printf("+-%s-+-%s-+-%s-+-%s-+%n",
+                "-".repeat(ID_COLUMN_WIDTH),
+                "-".repeat(NAME_COLUMN_WIDTH),
+                "-".repeat(PHONE_COLUMN_WIDTH),
+                "-".repeat(EMAIL_COLUMN_WIDTH));
+
+        System.out.printf(format,
+                contact.getId(),
+                contact.getName(),
+                contact.getPhone(),
+                contact.getEmail());
+    }
+
+    public static void showContactList(List<Contact> contactList) {
+        String format = "| %-" + ID_COLUMN_WIDTH + "s | %-" + NAME_COLUMN_WIDTH + "s |%n";
+
+        System.out.printf(format, "ID", "Nome");
+        System.out.printf("+-%s-+-%s-+%n",
+                "-".repeat(ID_COLUMN_WIDTH),
+                "-".repeat(NAME_COLUMN_WIDTH));
+
+        for (Contact contact : contactList) {
+            System.out.printf(format, contact.getId(), contact.getName());
+        }
     }
 }
