@@ -1,112 +1,67 @@
-import model.Contact;
+import controller.ContactController;
+import enums.State;
 import repository.AgendaRepository;
+import state.AppState;
 import ui.Input;
 import ui.Screen;
 
 import java.util.Scanner;
 
 public class AgendaApp {
+    private final AppState appState;
+    private final AgendaRepository agendaRepository;
+    private final ContactController contactController;
+    private final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public AgendaApp() {
+        this.appState = new AppState();
+        this.agendaRepository = new AgendaRepository();
+        this.contactController = new ContactController(appState, scanner, agendaRepository);
+    }
 
-        AgendaRepository data = new AgendaRepository();
+    public void run() {
 
-        Scanner input = new Scanner(System.in);
+        while (appState.getCurrentState() != State.EXIT) {
 
-        while (true) {
+            Screen.showMenu(agendaRepository.size());
 
-            Screen.showMenu(data.size());
-
-            int userOption = Input.getInt(input, "Informe a operação desejada: ", false);
-
-            if (userOption == 9) break;
+            int userOption = Input.getInt(scanner, "Informe a operação desejada: ", false);
 
             switch (userOption) {
                 case 1:
-                    System.out.println("═════════════ Adicionar novo contato ═══════════════");
-                    String name = Input.getString(input, "Nome: ", false);
-                    String phone = Input.getString(input, "Telefone: ", false);
-                    String email = Input.getString(input, "Email: ", false);
-
-                    Contact newContact = new Contact(name, phone, email);
-
-                    boolean created = data.create(newContact);
-
-                    String createdMessage = created ? "Contato adicionado!" : "Falha ao adicionar contato!";
-
-                    System.out.printf("%s Enter para continuar...%n", createdMessage);
-                    input.nextLine();
+                    contactController.add();
                     break;
                 case 2:
-                    System.out.println("═════════════════ Remover contato ══════════════════");
-                    String idToRemove =
-                            Input.getString(input, "Id [0 para cancelar]: ", false);
-
-                    if (idToRemove.equals("0")) break;
-
-                    boolean removed = data.remove(idToRemove);
-
-                    String removedMessage = removed ? "Contato removido!" : "Id não encontrado!";
-
-                    System.out.printf("%s Enter para continuar...", removedMessage);
-                    input.nextLine();
+                    contactController.remove();
                     break;
                 case 3:
-                    System.out.println("════════════════ Detalhar contato ══════════════════");
-                    String idToDetail =
-                            Input.getString(input, "Id [0 para cancelar]: ", false);
-
-                    if (idToDetail.equals("0")) break;
-
-                    Contact contact = data.read(idToDetail);
-
-                    if (contact != null) {
-                        Screen.showContactDetails(contact);
-                    } else {
-                        System.out.println("Contato não existe!");
-                    }
-
-                    System.out.println("Enter para continuar...");
-                    input.nextLine();
+                    contactController.showDetails();
                     break;
                 case 4:
-                    System.out.println("═════════════════ Editar contato ═══════════════════");
-                    String idToEdit =
-                            Input.getString(input, "Id [0 para cancelar]: ", false);
-
-                    if (idToEdit.equals("0")) break;
-
-                    String newName = Input.getString(input, "Novo Nome: ", true);
-                    String newPhone = Input.getString(input, "Novo Telefone: ", true);
-                    String newEmail = Input.getString(input, "Novo Email: ", true);
-
-                    Contact editedContact = new Contact(idToEdit, newName, newPhone, newEmail);
-
-                    boolean edited = data.update(editedContact);
-
-                    String editedMessage = edited ? "Contato editado!" : "Id não encontrado!";
-
-                    System.out.printf("%s Enter para continuar...", editedMessage);
-                    input.nextLine();
+                    contactController.edit();
                     break;
                 case 5:
-                    System.out.println("═════════════════ Listar contatos ══════════════════");
-                    Screen.showContactList(data.list());
-
-                    System.out.println("Enter para continuar...");
-                    input.nextLine();
+                    contactController.showList();
                     break;
                 case 6:
                     Screen.showAbout();
 
                     System.out.println("Enter para continuar...");
-                    input.nextLine();
+                    scanner.nextLine();
+                    break;
+                case 9:
+                    appState.setCurrentState(State.EXIT);
                     break;
                 default:
                     System.out.println("Opção inválida! Enter para continuar...");
-                    input.nextLine();
+                    scanner.nextLine();
             }
         }
-        input.close();
+        scanner.close();
+    }
+
+    public static void main(String[] args) {
+        AgendaApp app = new AgendaApp();
+        app.run();
     }
 }
