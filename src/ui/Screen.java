@@ -6,6 +6,17 @@ import java.util.List;
 
 public class Screen {
 
+    // Códigos ANSI para cores
+    public static final String RESET = "\u001B[0m";
+    public static final String BLACK = "\u001B[30m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+
     static final int ID_COLUMN_WIDTH = 2;
     static final int NAME_COLUMN_WIDTH = 30;
     static final int PHONE_COLUMN_WIDTH = 20;
@@ -14,7 +25,7 @@ public class Screen {
     public static void showMenu(int currentSize) {
         String counter = String.format("%04d", currentSize);
 
-        System.out.println("""
+        System.out.println(GREEN + """
                 ╔══════════════════════════════════════════════════╗
                 ║             _                    _               ║
                 ║            /_\\  __ _ ___ _ _  __| |__ _          ║
@@ -33,7 +44,7 @@ public class Screen {
                 ║        [6] - Sobre                               ║
                 ║                                                  ║
                 ║        [9] - Sair                                ║
-                ╚══════════════════════════════ Contatos""" + " " + counter + " ═════╝");
+                ╚══════════════════════════════ Contatos""" + " " + counter + " ═════╝" + RESET);
     }
 
     public static void showAbout() {
