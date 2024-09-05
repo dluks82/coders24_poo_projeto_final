@@ -40,19 +40,24 @@ public class UpdateController {
 
             showCurrentUserData();
 
-            String userInput = Input.getAsString(scanner, "Opção: ", false);
+            try {
+                String userInput = Input.getAsString(scanner, "Opção: ", false, false);
 
-            selectedOption = UpdateUserOption.fromUserInput(userInput);
+                selectedOption = UpdateUserOption.fromUserInput(userInput);
 
-            if (selectedOption != null) {
-                switch (selectedOption) {
-                    case NAME -> updateUserName();
-                    case PASSWORD -> updateUserPassword();
-                    case BACK -> appState.setCurrentState(State.LOGGED_IN);
-
+                if (selectedOption != null) {
+                    switch (selectedOption) {
+                        case NAME -> updateUserName();
+                        case PASSWORD -> updateUserPassword();
+                        case BACK -> appState.setCurrentState(State.LOGGED_IN);
+                    }
+                } else {
+                    Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                    scanner.nextLine();
                 }
-            } else {
-                System.out.println("║ Opção inválida!");
+            } catch (DataInputInterruptedException e) {
+                Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                scanner.nextLine();
             }
         }
     }
@@ -60,55 +65,65 @@ public class UpdateController {
     private void showCurrentUserData() {
         User loggedInUser = appState.getLoggedInUser();
         if (loggedInUser != null) {
-            System.out.println("║>>> Dados Atuais do Usuário:");
-            System.out.println("║ Nome: " + loggedInUser.getName());
-            System.out.println("║ CPF: " + loggedInUser.getCpf());
-            System.out.println("║");
+            Output.info("Dados do Usuário:");
+            Output.message("");
+            Output.message("Nome: " + loggedInUser.getName());
+            Output.message("CPF: " + loggedInUser.getCpf());
+            Output.message("");
         } else {
-            System.out.println("║ Nenhum usuário logado.");
+            Output.info("Nenhum usuário logado.");
             System.out.println("║");
         }
     }
 
     private void updateUserName() {
-        System.out.println("║>>> Atualizar Nome");
-        System.out.println("║>>> Digite 'cancel' para retornar...");
+        Output.info("Atualizar Nome");
+        Output.message("Digite 'cancel' para retornar...");
 
         try {
-            String name = Input.getAsString(scanner, "Digite o novo nome: ", true);
+            String name = Input.getAsString(scanner, "Digite o novo nome: ", true, false);
             if (!name.isEmpty()) {
                 User user = appState.getLoggedInUser();
                 user.setName(name);
                 bankRepository.updateUser(user);
 
                 appState.setLoggedInUser(user);
+
+                Output.info("Nome atualizado!");
+                scanner.nextLine();
             }
         } catch (DataInputInterruptedException e) {
-            System.out.println("║>>> Operação cancelada!");
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
         }
     }
 
     private void updateUserPassword() {
-        System.out.println("║>>> Trocar Senha");
-        System.out.println("║>>> Digite 'cancel' para retornar...");
+        Output.info("Trocar Senha");
+        Output.message("Digite 'cancel' para retornar...");
 
         try {
-            String password = Input.getAsPassword(scanner, "Digite a nova senha: ", true);
+            String password = Input.getAsPassword(scanner, "Digite a nova senha: ", true, true);
             if (!password.isEmpty()) {
-                String passwordConfirm = Input.getAsString(scanner, "Confirme a nova senha: ", true);
+                String passwordConfirm = Input.getAsString(scanner, "Confirme a nova senha: ", true, true);
 
                 if (!password.equals(passwordConfirm)) {
-                    System.out.println("║>>> As senhas não são iguais. Tente novamente.");
+                    Output.error("As senhas não são iguais! Por favor, tente novamente...");
+                    scanner.nextLine();
                 } else {
                     User user = appState.getLoggedInUser();
                     user.setPassword(password);
                     bankRepository.updateUser(user);
 
                     appState.setLoggedInUser(user);
+
+                    Output.info("Senha atualizada!");
+                    scanner.nextLine();
                 }
             }
         } catch (DataInputInterruptedException e) {
-            System.out.println("║>>> Operação cancelada!");
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
         }
     }
 }

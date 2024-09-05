@@ -2,6 +2,7 @@ package controller;
 
 import enums.LoggedInOption;
 import enums.State;
+import exception.DataInputInterruptedException;
 import repository.BankRepository;
 import state.AppState;
 import ui.*;
@@ -39,23 +40,29 @@ public class LoggedInController {
             Header.show(appState.getLoggedInUserName());
             MenuUtils.showMenu(loggedInMenuOptions, "O que deseja fazer?");
 
-            String userInput = Input.getAsString(scanner, "Opção: ", false);
+            try {
+                String userInput = Input.getAsString(scanner, "Opção: ", false, false);
 
-            selectedOption = LoggedInOption.fromUserInput(userInput);
+                selectedOption = LoggedInOption.fromUserInput(userInput);
 
-            if (selectedOption != null) {
-                switch (selectedOption) {
-                    case OPEN_ACCOUNT -> System.out.println("Implementar...");
-                    case ACCESS_ACCOUNT -> System.out.println("Implementar...");
-                    case UPDATE_INFO -> appState.setCurrentState(State.UPDATE_INFO);
-                    case CLOSE_ACCOUNT -> System.out.println("Implementar...");
-                    case EXIT -> {
-                        appState.setCurrentState(State.NOT_LOGGED_IN);
-                        appState.setLoggedInUser(null);
+                if (selectedOption != null) {
+                    switch (selectedOption) {
+                        case OPEN_ACCOUNT -> System.out.println("Implementar...");
+                        case ACCESS_ACCOUNT -> System.out.println("Implementar...");
+                        case UPDATE_INFO -> appState.setCurrentState(State.UPDATE_INFO);
+                        case CLOSE_ACCOUNT -> System.out.println("Implementar...");
+                        case EXIT -> {
+                            appState.setCurrentState(State.NOT_LOGGED_IN);
+                            appState.setLoggedInUser(null);
+                        }
                     }
+                } else {
+                    Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                    scanner.nextLine();
                 }
-            } else {
-                System.out.println("║ Opção inválida!");
+            } catch (DataInputInterruptedException e) {
+                Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                scanner.nextLine();
             }
         }
     }
