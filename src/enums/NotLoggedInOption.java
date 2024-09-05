@@ -2,7 +2,8 @@ package enums;
 
 public enum NotLoggedInOption {
     LOGIN("1", 'E', "Entrar"),
-    REGISTER("2", 'R', "Registrar"),
+    ACCESS_ACCOUNT("2", 'C', "Acessar Conta"),
+    REGISTER("3", 'R', "Registrar"),
     EXIT("9", 'A', "Encerrar App");
 
     private final String number;
