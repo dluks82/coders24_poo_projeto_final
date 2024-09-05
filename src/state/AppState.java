@@ -1,11 +1,13 @@
 package state;
 
 import enums.State;
+import model.Account;
 import model.User;
 
 public class AppState {
     private State currentState;
     private User loggedInUser;
+    private Account loggedInAccount;
 
     public AppState() {
         this.currentState = State.NOT_LOGGED_IN;
@@ -25,6 +27,14 @@ public class AppState {
 
     public User getLoggedInUser() {
         return loggedInUser;
+    }
+
+    public Account getLoggedInAccount() {
+        return loggedInAccount;
+    }
+
+    public void setLoggedInAccount(Account loggedInAccount) {
+        this.loggedInAccount = loggedInAccount;
     }
 
     public String getLoggedUserId() {

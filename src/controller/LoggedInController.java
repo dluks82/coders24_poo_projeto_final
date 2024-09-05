@@ -126,15 +126,37 @@ public class LoggedInController {
         if (selectedOption != null) {
             if (selectedOption.getOptionChar() == '9') return;
 
-            System.out.println("Você selecionou a conta: " + selectedOption.getDescription());
+            accessAccount(selectedOption.getValue().toString());
         } else {
             System.out.println("Opção inválida! Tente novamente.");
+            scanner.nextLine();
         }
+    }
 
-        // Implementar lógica de acesso à conta
+    private void accessAccount(String accountNumber) {
+        Output.info("Acessar Conta");
+        Output.message("Digite 'cancel' para retornar...");
 
+        try {
+            Output.info("Acessando a conta: " + accountNumber);
 
-        scanner.nextLine();
+            String accountPassword =
+                    Input.getAsAccountPassword(scanner,
+                            "Digite a senha da conta: ",
+                            false, true);
 
+            Account account = bankRepository.getAccount(accountNumber);
+
+            if (account == null || !account.validPassword(accountPassword)) {
+                Output.error("Conta ou senha incorreta!");
+            }
+
+            appState.setLoggedInAccount(account);
+            appState.setCurrentState(State.ACCOUNT_MANAGEMENT);
+
+        } catch (DataInputInterruptedException e) {
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
+        }
     }
 }

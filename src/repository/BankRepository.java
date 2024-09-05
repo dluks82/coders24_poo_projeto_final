@@ -65,6 +65,15 @@ public class BankRepository {
         return true;
     }
 
+    public Account getAccount(String accountNumber) {
+        for (Account account : accountList) {
+            if (account.getNumber().equals(accountNumber)) {
+                return account;
+            }
+        }
+        return null;
+    }
+
     public List<Account> getUserAccountList(String ownerId) {
         List<Account> list = new ArrayList<>();
 

@@ -50,7 +50,14 @@ public class AccountController {
                         case WITHDRAW -> System.out.println("Implementar...");
                         case TRANSFER -> System.out.println("Implementar...");
                         case CHECK_BALANCE -> System.out.println("Implementar...");
-                        case EXIT -> appState.setCurrentState(State.LOGGED_IN);
+                        case EXIT -> {
+                            if (appState.getLoggedInUser() != null) {
+                                appState.setCurrentState(State.LOGGED_IN);
+                            } else {
+                                appState.setCurrentState(State.NOT_LOGGED_IN);
+                            }
+                            appState.setLoggedInAccount(null);
+                        }
                     }
                 } else {
                     Output.info("Opção inválida! Por favor, informe uma opção do menu...");
