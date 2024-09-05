@@ -5,5 +5,5 @@ import model.User;
 
 import java.util.List;
 
-public record DataWrapper(List<User> userList, List<Account> accountList) {
+public record DataWrapper(List<User> userList, List<Account> accountList, int lastAccountNumber) {
 }
