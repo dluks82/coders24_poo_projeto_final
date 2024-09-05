@@ -23,13 +23,15 @@ public class LoggedInController {
     }
 
     public void run() {
+
         List<MenuUtils.MenuOption> loggedInMenuOptions = Arrays.asList(
-                new MenuUtils.MenuOption("[1] - Abrir Conta", 'A'),
-                new MenuUtils.MenuOption("[2] - Acessar Conta", 'c'),
-                new MenuUtils.MenuOption("[3] - Atualizar Dados Cadastrais", 't'),
-                new MenuUtils.MenuOption("[4] - Encerrar Conta", 'E'),
-                new MenuUtils.MenuOption("[9] - Sair", 'S')
+                new MenuUtils.MenuOption(LoggedInOption.OPEN_ACCOUNT.getText(), LoggedInOption.OPEN_ACCOUNT.getLetter()),
+                new MenuUtils.MenuOption(LoggedInOption.ACCESS_ACCOUNT.getText(), LoggedInOption.ACCESS_ACCOUNT.getLetter()),
+                new MenuUtils.MenuOption(LoggedInOption.UPDATE_INFO.getText(), LoggedInOption.UPDATE_INFO.getLetter()),
+                new MenuUtils.MenuOption(LoggedInOption.CLOSE_ACCOUNT.getText(), LoggedInOption.CLOSE_ACCOUNT.getLetter()),
+                new MenuUtils.MenuOption(LoggedInOption.EXIT.getText(), LoggedInOption.EXIT.getLetter())
         );
+
         while (appState.getCurrentState() == State.LOGGED_IN) {
             LoggedInOption selectedOption = null;
 
@@ -37,39 +39,9 @@ public class LoggedInController {
             Header.show(appState.getLoggedInUserName());
             MenuUtils.showMenu(loggedInMenuOptions, "O que deseja fazer?");
 
-//            LoggedInMenu.show();
-
             String userInput = Input.getAsString(scanner, "Opção: ", false);
 
-            switch (userInput) {
-                case "1":
-                case "A":
-                case "a":
-                    selectedOption = LoggedInOption.OPEN_ACCOUNT;
-                    break;
-                case "2":
-                case "C":
-                case "c":
-                    selectedOption = LoggedInOption.ACCESS_ACCOUNT;
-                    break;
-                case "3":
-                case "T":
-                case "t":
-                    selectedOption = LoggedInOption.UPDATE_INFO;
-                    break;
-                case "4":
-                case "F":
-                case "f":
-                    selectedOption = LoggedInOption.CLOSE_ACCOUNT;
-                    break;
-                case "9":
-                case "S":
-                case "s":
-                    selectedOption = LoggedInOption.EXIT;
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
-            }
+            selectedOption = LoggedInOption.fromUserInput(userInput);
 
             if (selectedOption != null) {
                 switch (selectedOption) {
@@ -82,6 +54,8 @@ public class LoggedInController {
                         appState.setLoggedInUser(null);
                     }
                 }
+            } else {
+                System.out.println("║ Opção inválida!");
             }
         }
     }

@@ -10,8 +10,6 @@ import ui.Screen;
 public class CodersBankApp {
     private final AppState appState;
 
-    private final BankRepository bankRepository = new BankRepository();
-
     private final NotLoggedInController notLoggedInController;
     private final LoggedInController loggedInController;
     private final AccountController accountController;
@@ -19,6 +17,7 @@ public class CodersBankApp {
 
     public CodersBankApp() {
         this.appState = new AppState();
+        BankRepository bankRepository = new BankRepository();
         this.notLoggedInController = new NotLoggedInController(appState, bankRepository);
         this.loggedInController = new LoggedInController(appState, bankRepository);
         this.accountController = new AccountController(appState, bankRepository);

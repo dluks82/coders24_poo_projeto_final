@@ -23,18 +23,18 @@ public class DataPersistence {
         return gson.fromJson(json, typeOfT);
     }
 
-    public static void save(BankDataWrapper bankDataWrapper) {
+    public static void save(DataWrapper dataWrapper) {
         try (FileWriter fileWriter = new FileWriter("database.json")) {
-            fileWriter.write(toJson(bankDataWrapper));
+            fileWriter.write(toJson(dataWrapper));
         } catch (IOException e) {
             throw new RuntimeException("Failed to save data: " + e.getMessage(), e);
         }
     }
 
-    public static BankDataWrapper load() {
+    public static DataWrapper load() {
         File file = new File("database.json");
         if (!file.exists()) {
-            return new BankDataWrapper(new ArrayList<>(), new ArrayList<>());
+            return new DataWrapper(new ArrayList<>(), new ArrayList<>());
         }
 
         try (FileReader fileReader = new FileReader(file)) {
@@ -44,7 +44,7 @@ public class DataPersistence {
             while ((line = bufferedReader.readLine()) != null) {
                 json.append(line);
             }
-            Type listType = new TypeToken<BankDataWrapper>() {
+            Type listType = new TypeToken<DataWrapper>() {
             }.getType();
             return fromJsonToList(json.toString(), listType);
         } catch (IOException e) {

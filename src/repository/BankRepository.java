@@ -1,6 +1,6 @@
 package repository;
 
-import data.BankDataWrapper;
+import data.DataWrapper;
 import data.DataPersistence;
 import model.Account;
 import model.User;
@@ -12,19 +12,36 @@ public class BankRepository {
     private final List<Account> accountList;
 
     public BankRepository() {
-        BankDataWrapper bankDataWrapper = DataPersistence.load();
-        this.userList = bankDataWrapper.userList();
-        this.accountList = bankDataWrapper.accountList();
+        DataWrapper dataWrapper = DataPersistence.load();
+        this.userList = dataWrapper.userList();
+        this.accountList = dataWrapper.accountList();
     }
 
     private void saveData() {
-        DataPersistence.save(new BankDataWrapper(userList, accountList));
+        DataPersistence.save(new DataWrapper(userList, accountList));
     }
 
     public boolean createUser(User user) {
         userList.add(user);
         saveData();
         return true;
+    }
+
+    public boolean updateUser(User user) {
+        int userIndex = getUserIndex(user.getCpf());
+        if (userIndex != -1) {
+            userList.set(userIndex, user);
+            saveData();
+        }
+        return true;
+    }
+
+    public int getUserIndex(String cpf) {
+        for (int i = 0; i < userList.size(); i++) {
+            User user = userList.get(i);
+            if (user.getCpf().equals(cpf)) return i;
+        }
+        return -1;
     }
 
     public User getUser(String cpf) {
