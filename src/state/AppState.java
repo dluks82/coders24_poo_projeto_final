@@ -23,6 +23,10 @@ public class AppState {
         this.loggedInUser = user;
     }
 
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+
     public String getLoggedUserId() {
         if (loggedInUser != null) {
             return loggedInUser.getCpf();

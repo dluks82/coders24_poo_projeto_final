@@ -1,5 +1,9 @@
 package ui;
 
+import exception.DataInputInterruptedException;
+import exception.InvalidPasswordException;
+import util.Validator;
+
 import java.util.Scanner;
 
 public class Input {
@@ -8,93 +12,117 @@ public class Input {
 
     public static int getAsInt(Scanner scanner, String promptMessage, boolean canBeNegative) {
         while (true) {
-//            System.out.println(emptyLine);
             System.out.print("║   -> " + promptMessage);
             try {
-                int value = Integer.parseInt(scanner.nextLine());
-                if (value >= 0 || canBeNegative) {
-                    return value;
+                String value = scanner.nextLine();
+
+                if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
+
+                int parsedValue = Integer.parseInt(value);
+
+                if (parsedValue >= 0 || canBeNegative) {
+                    return parsedValue;
                 }
             } catch (NumberFormatException e) {
-                System.err.print("║   -> " + "Invalid value!");
-                scanner.nextLine(); // TODO: improve later
+                System.out.print("║   -> " + "Invalid value!");
+                System.out.println(emptyLine);
             }
         }
     }
 
     public static double getAsDouble(Scanner scanner, String promptMessage, boolean canBeNegative) {
         while (true) {
-//            System.out.println(emptyLine);
             System.out.print("║   -> " + promptMessage);
             try {
-                double value = Double.parseDouble(scanner.nextLine());
-                if (value >= 0 || canBeNegative) {
-                    return value;
-                }
-                System.err.print("║   -> " + "Cannot be negative!");
-                scanner.nextLine(); // TODO: improve later
+                String value = scanner.nextLine();
 
+                if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
+
+                double parsedValue = Double.parseDouble(value);
+                if (parsedValue >= 0 || canBeNegative) {
+                    return parsedValue;
+                }
+                System.out.print("║   -> " + "Cannot be negative!");
+                System.out.println(emptyLine);
             } catch (NumberFormatException e) {
-                System.err.print("║   -> " + "Invalid value!");
-                scanner.nextLine(); // TODO: improve later
+                System.out.print("║   -> " + "Invalid value!");
+                System.out.println(emptyLine);
             }
         }
     }
 
     public static long getAsLong(Scanner scanner, String promptMessage, boolean canBeNegative) {
         while (true) {
-//            System.out.println(emptyLine);
             System.out.print("║   -> " + promptMessage);
             try {
-                long value = Long.parseLong(scanner.nextLine());
-                if (value >= 0 || canBeNegative) {
-                    return value;
-                }
-                System.err.print("║   -> " + "Cannot be negative!");
-                scanner.nextLine(); // TODO: improve later
+                String value = scanner.nextLine();
 
+                if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
+
+                long parsedValue = Long.parseLong(value);
+
+                if (parsedValue >= 0 || canBeNegative) {
+                    return parsedValue;
+                }
+
+                System.out.print("║   -> " + "Cannot be negative!");
+                System.out.println(emptyLine);
             } catch (NumberFormatException e) {
-                System.err.print("║   -> " + "Invalid value!");
-                scanner.nextLine(); // TODO: improve later
+                System.out.print("║   -> " + "Invalid value!");
+                System.out.println(emptyLine);
             }
         }
     }
 
     public static String getAsString(Scanner scanner, String promptMessage, boolean canBeEmpty) {
         while (true) {
-//            System.out.println(emptyLine);
             System.out.print("║   -> " + promptMessage);
             String value = scanner.nextLine().trim();
+
+            if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
+
             if (!value.isEmpty() || canBeEmpty) {
                 return value;
             }
-            System.err.print("║   -> " + "Input cannot be empty!");
-            scanner.nextLine(); // TODO: improve later
+
+            System.out.print("║   -> " + "Input cannot be empty!");
+            System.out.println(emptyLine);
         }
     }
 
-    public static int getInt(Scanner scanner, String promptMessage, boolean canBeNegative) {
+    public static String getAsCPF(Scanner scanner, String promptMessage, boolean canBeEmpty) {
         while (true) {
-            System.out.print(promptMessage);
+            System.out.print("║   -> " + promptMessage);
+            String value = scanner.nextLine().trim();
+
+            if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
+
+            if (value.isEmpty() && canBeEmpty) return value;
+
+            if (Validator.isValidCPF(value)) return value;
+
+            System.out.println("║   -> CPF is not valid! Please try again.");
+            System.out.println(emptyLine);
+        }
+    }
+
+    public static String getAsPassword(Scanner scanner, String promptMessage, boolean canBeEmpty) {
+        while (true) {
+            System.out.print("║   -> " + promptMessage);
             try {
-                int value = Integer.parseInt(scanner.nextLine());
-                if (value >= 0 || canBeNegative) return value;
+                String value = scanner.nextLine().trim();
 
-                System.out.println("Cannot be negative!");
+                if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
 
-            } catch (NumberFormatException exception) {
-                System.out.println("Invalid value!");
+                if (value.isEmpty() && canBeEmpty) return value;
+
+                if (Validator.isValidPassword(value)) return value;
+
+            } catch (InvalidPasswordException e) {
+                System.out.println("║   -> Erro: " + e.getMessage());
+                System.out.println(emptyLine);
             }
         }
     }
 
-    public static String getString(Scanner scanner, String promptMessage, boolean canBeEmpty) {
-        while (true) {
-            System.out.print(promptMessage);
-            String value = scanner.nextLine().trim();
-            if (!value.isEmpty() || canBeEmpty) return value;
-
-            System.out.println("Cannot be empty!");
-        }
-    }
 }

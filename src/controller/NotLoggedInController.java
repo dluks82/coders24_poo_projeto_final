@@ -2,6 +2,8 @@ package controller;
 
 import enums.NotLoggedInOption;
 import enums.State;
+import exception.DataInputInterruptedException;
+import exception.DuplicateCPFException;
 import model.User;
 import repository.BankRepository;
 import state.AppState;
@@ -24,9 +26,9 @@ public class NotLoggedInController {
 
     public void run() {
         List<MenuUtils.MenuOption> notLoggedMenuOptions = Arrays.asList(
-                new MenuUtils.MenuOption("[1] - Entrar", 'E'),
-                new MenuUtils.MenuOption("[2] - Registrar", 'R'),
-                new MenuUtils.MenuOption("[9] - Encerrar App", 'A')
+                new MenuUtils.MenuOption(NotLoggedInOption.LOGIN.getText(), NotLoggedInOption.LOGIN.getLetter()),
+                new MenuUtils.MenuOption(NotLoggedInOption.REGISTER.getText(), NotLoggedInOption.REGISTER.getLetter()),
+                new MenuUtils.MenuOption(NotLoggedInOption.EXIT.getText(), NotLoggedInOption.EXIT.getLetter())
         );
 
         while (appState.getCurrentState() == State.NOT_LOGGED_IN) {
@@ -35,28 +37,10 @@ public class NotLoggedInController {
             Screen.clear();
             Header.show(appState.getLoggedInUserName());
             MenuUtils.showMenu(notLoggedMenuOptions, "Entre ou Registre-se");
-//            NotLoggedInMenu.show();
 
             String userInput = Input.getAsString(scanner, "Opção: ", false);
-            switch (userInput) {
-                case "1":
-                case "E":
-                case "e":
-                    selectedOption = NotLoggedInOption.LOGIN;
-                    break;
-                case "2":
-                case "R":
-                case "r":
-                    selectedOption = NotLoggedInOption.REGISTER;
-                    break;
-                case "9":
-                case "A":
-                case "a":
-                    selectedOption = NotLoggedInOption.EXIT;
-                    break;
-                default:
-                    System.out.println("║ Opção inválida!");
-            }
+
+            selectedOption = NotLoggedInOption.fromUserInput(userInput);
 
             if (selectedOption != null) {
                 switch (selectedOption) {
@@ -64,43 +48,67 @@ public class NotLoggedInController {
                     case REGISTER -> registerNewUser();
                     case EXIT -> appState.setCurrentState(State.EXIT);
                 }
+            } else {
+                System.out.println("║ Opção inválida!");
             }
         }
     }
 
     public void registerNewUser() {
         System.out.println("║>>> Registrar Usuário");
-        String cpf = Input.getAsString(scanner, "CPF: ", false);
-        String name = Input.getAsString(scanner, "Nome: ", false);
-        String password = Input.getAsString(scanner, "Senha: ", false);
+        System.out.println("║>>> Digite 'cancel' para retornar...");
 
-        User newUser = new User(cpf, name, password);
+        try {
+            String cpf = Input.getAsCPF(scanner, "CPF: ", false);
+            if (bankRepository.getUser(cpf) != null) throw new DuplicateCPFException();
 
-        boolean created = bankRepository.createUser(newUser);
+            String name = Input.getAsString(scanner, "Digite o nome: ", false);
+            String password = Input.getAsPassword(scanner, "Digite a senha: ", false);
 
-        String createdMessage = created ? "Usuário registrado!" : "Falha ao criar usuário!";
+            String passwordConfirm = Input.getAsString(scanner, "Confirme a senha: ", true);
 
-        System.out.printf("%s Enter para continuar...%n", createdMessage);
-        scanner.nextLine();
+            if (!password.equals(passwordConfirm)) {
+                System.out.println("║>>> As senhas não são iguais. Tente novamente.");
+            } else {
+                User newUser = new User(cpf, name, password);
+
+                boolean created = bankRepository.createUser(newUser);
+
+                String createdMessage = created ? "Usuário registrado!" : "Falha ao criar usuário!";
+
+                System.out.printf("%s Enter para continuar...%n", createdMessage);
+                scanner.nextLine();
+            }
+        } catch (DataInputInterruptedException e) {
+            System.out.println("║>>> Operação cancelada!");
+        } catch (DuplicateCPFException e) {
+            System.out.println("║>>> O CPF informado já está cadastrado. Por favor, faça login.");
+            scanner.nextLine();
+        }
     }
 
     public void loginUser() {
         System.out.println("║>>> Entrar");
-        String cpf = Input.getAsString(scanner, "CPF: ", false);
-        String password = Input.getAsString(scanner, "Senha: ", false);
+        System.out.println("║>>> Digite 'cancel' para retornar...");
+        try {
+            String cpf = Input.getAsCPF(scanner, "Digite o CPF: ", false);
+            String password = Input.getAsString(scanner, "Digite a senha: ", false);
 
-        User user = bankRepository.getUser(cpf);
+            User user = bankRepository.getUser(cpf);
 
-        if (user == null) {
-            System.out.println("║ Usuário ou senha inválidos!");
-            return;
-        }
+            if (user == null) {
+                System.out.println("║ Usuário ou senha inválidos!");
+                return;
+            }
 
-        if (user.validPassword(password)) {
-            appState.setCurrentState(State.LOGGED_IN);
-            appState.setLoggedInUser(user);
-        } else {
-            System.out.println("║ Usuário ou senha inválidos!");
+            if (user.validPassword(password)) {
+                appState.setCurrentState(State.LOGGED_IN);
+                appState.setLoggedInUser(user);
+            } else {
+                System.out.println("║ Usuário ou senha inválidos!");
+            }
+        } catch (DataInputInterruptedException e) {
+            System.out.println("║>>> Operação cancelada!");
         }
     }
 }
