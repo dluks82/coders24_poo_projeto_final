@@ -38,77 +38,84 @@ public class NotLoggedInController {
             Header.show(appState.getLoggedInUserName());
             MenuUtils.showMenu(notLoggedMenuOptions, "Entre ou Registre-se");
 
-            String userInput = Input.getAsString(scanner, "Opção: ", false);
+            try {
+                String userInput = Input.getAsString(scanner, "Opção: ", false, false);
 
-            selectedOption = NotLoggedInOption.fromUserInput(userInput);
+                selectedOption = NotLoggedInOption.fromUserInput(userInput);
 
-            if (selectedOption != null) {
-                switch (selectedOption) {
-                    case LOGIN -> loginUser();
-                    case REGISTER -> registerNewUser();
-                    case EXIT -> appState.setCurrentState(State.EXIT);
+                if (selectedOption != null) {
+                    switch (selectedOption) {
+                        case LOGIN -> loginUser();
+                        case REGISTER -> registerNewUser();
+                        case EXIT -> appState.setCurrentState(State.EXIT);
+                    }
+                } else {
+                    Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                    scanner.nextLine();
                 }
-            } else {
-                System.out.println("║ Opção inválida!");
+            } catch (DataInputInterruptedException e) {
+                Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                scanner.nextLine();
             }
         }
     }
 
     public void registerNewUser() {
-        System.out.println("║>>> Registrar Usuário");
-        System.out.println("║>>> Digite 'cancel' para retornar...");
+        Output.info("Registrar Usuário");
+        Output.message("Digite 'cancel' para retornar...");
 
         try {
-            String cpf = Input.getAsCPF(scanner, "CPF: ", false);
+            String cpf = Input.getAsCPF(scanner, "Digite o CPF: ", false);
             if (bankRepository.getUser(cpf) != null) throw new DuplicateCPFException();
 
-            String name = Input.getAsString(scanner, "Digite o nome: ", false);
-            String password = Input.getAsPassword(scanner, "Digite a senha: ", false);
+            String name = Input.getAsString(scanner, "Digite o nome: ", false, false);
+            String password = Input.getAsPassword(scanner, "Digite a senha: ", false, true);
 
-            String passwordConfirm = Input.getAsString(scanner, "Confirme a senha: ", true);
+            String passwordConfirm = Input.getAsString(scanner, "Confirme a senha: ", true, true);
 
             if (!password.equals(passwordConfirm)) {
-                System.out.println("║>>> As senhas não são iguais. Tente novamente.");
+                Output.error("As senhas não são iguais! Por favor, tente novamente...");
+                scanner.nextLine();
             } else {
                 User newUser = new User(cpf, name, password);
 
                 boolean created = bankRepository.createUser(newUser);
 
-                String createdMessage = created ? "Usuário registrado!" : "Falha ao criar usuário!";
-
-                System.out.printf("%s Enter para continuar...%n", createdMessage);
+                if (created) {
+                    Output.info("Usuário registrado!");
+                } else {
+                    Output.error("Falha ao criar usuário!");
+                }
                 scanner.nextLine();
             }
         } catch (DataInputInterruptedException e) {
-            System.out.println("║>>> Operação cancelada!");
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
         } catch (DuplicateCPFException e) {
-            System.out.println("║>>> O CPF informado já está cadastrado. Por favor, faça login.");
+            Output.info("O CPF informado já está cadastrado. Por favor, faça login.");
             scanner.nextLine();
         }
     }
 
     public void loginUser() {
-        System.out.println("║>>> Entrar");
-        System.out.println("║>>> Digite 'cancel' para retornar...");
+        Output.info("Login");
+        Output.message("Digite 'cancel' para retornar...");
         try {
             String cpf = Input.getAsCPF(scanner, "Digite o CPF: ", false);
-            String password = Input.getAsString(scanner, "Digite a senha: ", false);
+            String password = Input.getAsString(scanner, "Digite a senha: ", false, true);
 
             User user = bankRepository.getUser(cpf);
 
-            if (user == null) {
-                System.out.println("║ Usuário ou senha inválidos!");
+            if (user == null || !user.validPassword(password)) {
+                Output.error("Usuário ou senha inválidos!");
+                scanner.nextLine();
                 return;
             }
-
-            if (user.validPassword(password)) {
-                appState.setCurrentState(State.LOGGED_IN);
-                appState.setLoggedInUser(user);
-            } else {
-                System.out.println("║ Usuário ou senha inválidos!");
-            }
+            appState.setCurrentState(State.LOGGED_IN);
+            appState.setLoggedInUser(user);
         } catch (DataInputInterruptedException e) {
-            System.out.println("║>>> Operação cancelada!");
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
         }
     }
 }

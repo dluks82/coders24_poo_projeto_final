@@ -3,6 +3,7 @@ package controller;
 import enums.AccountOption;
 import enums.LoggedInOption;
 import enums.State;
+import exception.DataInputInterruptedException;
 import repository.BankRepository;
 import state.AppState;
 import ui.*;
@@ -39,21 +40,26 @@ public class AccountController {
             Header.show(appState.getLoggedInUserName());
             MenuUtils.showMenu(accountMenuOptions, "Operações de conta");
 
-            String userInput = Input.getAsString(scanner, "Opção: ", false);
+            try {
+                String userInput = Input.getAsString(scanner, "Opção: ", false, false);
 
-            selectedOption = AccountOption.fromUserInput(userInput);
+                selectedOption = AccountOption.fromUserInput(userInput);
 
-            if (selectedOption != null) {
-                switch (selectedOption) {
-                    case DEPOSIT -> System.out.println("Implementar...");
-                    case WITHDRAW -> System.out.println("Implementar...");
-                    case TRANSFER -> System.out.println("Implementar...");
-                    case CHECK_BALANCE -> System.out.println("Implementar...");
-                    case EXIT -> appState.setCurrentState(State.LOGGED_IN);
-
+                if (selectedOption != null) {
+                    switch (selectedOption) {
+                        case DEPOSIT -> System.out.println("Implementar...");
+                        case WITHDRAW -> System.out.println("Implementar...");
+                        case TRANSFER -> System.out.println("Implementar...");
+                        case CHECK_BALANCE -> System.out.println("Implementar...");
+                        case EXIT -> appState.setCurrentState(State.LOGGED_IN);
+                    }
+                } else {
+                    Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                    scanner.nextLine();
                 }
-            } else {
-                System.out.println("║ Opção inválida!");
+            } catch (DataInputInterruptedException e) {
+                Output.info("Opção inválida! Por favor, informe uma opção do menu...");
+                scanner.nextLine();
             }
         }
     }
