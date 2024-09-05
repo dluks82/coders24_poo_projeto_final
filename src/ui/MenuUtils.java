@@ -12,8 +12,8 @@ public class MenuUtils {
         String emptyLine = "║" + " ".repeat(maxLineLength) + "║";
         String bottomLine = "╚" + "═".repeat(maxLineLength) + "╝";
 
-        System.out.println(topLine);
-        System.out.println(emptyLine);
+//        System.out.println(topLine);
+//        System.out.println(emptyLine);
 
         if (title != null && !title.isEmpty()) {
             System.out.println(prepareTitleLine(title, maxLineLength));
@@ -32,12 +32,12 @@ public class MenuUtils {
         String highLightColor = Color.GREEN.getCode();
         String resetColor = Color.RESET.getCode();
 
-        String textWithHighlightedLetter = option.getText().replaceFirst(
-                Character.toString(option.getHighlightLetter()),
-                highLightColor + option.getHighlightLetter() + resetColor
+        String optionText = option.getDescription().replaceFirst(
+                Character.toString(option.getOptionChar()),
+                highLightColor + option.getOptionChar() + resetColor
         );
 
-        return String.format("║   %-70.70s ║", textWithHighlightedLetter);
+        return String.format("║   %-70.70s ║", optionText);
     }
 
     private static String prepareTitleLine(String title, int maxLineLength) {
@@ -45,20 +45,26 @@ public class MenuUtils {
     }
 
     public static class MenuOption {
-        private final String text;
-        private final char highlightLetter;
+        private final String description;
+        private final char optionChar;
+        private Object value;
 
-        public MenuOption(String text, char highlightLetter) {
-            this.text = text;
-            this.highlightLetter = highlightLetter;
+        public MenuOption(String description, char optionChar, Object value) {
+            this.description = description;
+            this.optionChar = optionChar;
+            this.value = value;
         }
 
-        public String getText() {
-            return text;
+        public String getDescription() {
+            return description;
         }
 
-        public char getHighlightLetter() {
-            return highlightLetter;
+        public char getOptionChar() {
+            return optionChar;
+        }
+
+        public Object getValue() {
+            return value;
         }
     }
 }
