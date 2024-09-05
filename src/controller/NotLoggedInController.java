@@ -4,6 +4,7 @@ import enums.NotLoggedInOption;
 import enums.State;
 import exception.DataInputInterruptedException;
 import exception.DuplicateCPFException;
+import model.Account;
 import model.User;
 import repository.BankRepository;
 import state.AppState;
@@ -27,6 +28,7 @@ public class NotLoggedInController {
     public void run() {
         List<MenuUtils.MenuOption> notLoggedMenuOptions = Arrays.asList(
                 new MenuUtils.MenuOption(NotLoggedInOption.LOGIN.getText(), NotLoggedInOption.LOGIN.getLetter(), null),
+                new MenuUtils.MenuOption(NotLoggedInOption.ACCESS_ACCOUNT.getText(), NotLoggedInOption.ACCESS_ACCOUNT.getLetter(), null),
                 new MenuUtils.MenuOption(NotLoggedInOption.REGISTER.getText(), NotLoggedInOption.REGISTER.getLetter(), null),
                 new MenuUtils.MenuOption(NotLoggedInOption.EXIT.getText(), NotLoggedInOption.EXIT.getLetter(), null)
         );
@@ -36,7 +38,7 @@ public class NotLoggedInController {
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());
-            MenuUtils.showMenu(notLoggedMenuOptions, "Entre ou Registre-se");
+            MenuUtils.showMenu(notLoggedMenuOptions, "Menu Inicial");
 
             try {
                 String userInput = Input.getAsString(scanner, "Opção: ", false, false);
@@ -46,6 +48,7 @@ public class NotLoggedInController {
                 if (selectedOption != null) {
                     switch (selectedOption) {
                         case LOGIN -> loginUser();
+                        case ACCESS_ACCOUNT -> accessAccount();
                         case REGISTER -> registerNewUser();
                         case EXIT -> appState.setCurrentState(State.EXIT);
                     }
@@ -58,6 +61,36 @@ public class NotLoggedInController {
                 scanner.nextLine();
             }
         }
+    }
+
+    private void accessAccount() {
+        Output.info("Acessar Conta");
+        Output.message("Digite 'cancel' para retornar...");
+
+        try {
+            String accountNumber =
+                    Input.getAsString(scanner,
+                            "Digite número da conta: ",
+                            false, false);
+            String accountPassword =
+                    Input.getAsAccountPassword(scanner,
+                            "Digite a senha da conta: ",
+                            false, true);
+
+            Account account = bankRepository.getAccount(accountNumber);
+
+            if (account == null || !account.validPassword(accountPassword)) {
+                Output.error("Conta ou senha incorreta!");
+            }
+
+            appState.setLoggedInAccount(account);
+            appState.setCurrentState(State.ACCOUNT_MANAGEMENT);
+
+        } catch (DataInputInterruptedException e) {
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
+        }
+
     }
 
     public void registerNewUser() {
