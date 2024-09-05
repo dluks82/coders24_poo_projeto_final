@@ -36,7 +36,7 @@ public class LoggedInController {
         );
 
         while (appState.getCurrentState() == State.LOGGED_IN) {
-            LoggedInOption selectedOption = null;
+            LoggedInOption selectedOption;
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());

@@ -1,7 +1,6 @@
 package controller;
 
 import enums.AccountOption;
-import enums.LoggedInOption;
 import enums.State;
 import exception.DataInputInterruptedException;
 import repository.BankRepository;
@@ -34,7 +33,7 @@ public class AccountController {
         );
 
         while (appState.getCurrentState() == State.ACCOUNT_MANAGEMENT) {
-            AccountOption selectedOption = null;
+            AccountOption selectedOption;
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());

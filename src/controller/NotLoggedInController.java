@@ -32,7 +32,7 @@ public class NotLoggedInController {
         );
 
         while (appState.getCurrentState() == State.NOT_LOGGED_IN) {
-            NotLoggedInOption selectedOption = null;
+            NotLoggedInOption selectedOption;
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());

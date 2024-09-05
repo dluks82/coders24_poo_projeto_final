@@ -32,7 +32,7 @@ public class UpdateController {
         );
 
         while (appState.getCurrentState() == State.UPDATE_INFO) {
-            UpdateUserOption selectedOption = null;
+            UpdateUserOption selectedOption;
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());

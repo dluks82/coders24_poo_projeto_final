@@ -8,7 +8,7 @@ public class MenuUtils {
 
     public static void showMenu(List<MenuOption> options, String title) {
         int maxLineLength = 65;
-        String topLine = "╔" + "═".repeat(maxLineLength) + "╗";
+//        String topLine = "╔" + "═".repeat(maxLineLength) + "╗";
         String emptyLine = "║" + " ".repeat(maxLineLength) + "║";
         String bottomLine = "╚" + "═".repeat(maxLineLength) + "╝";
 
@@ -47,7 +47,7 @@ public class MenuUtils {
     public static class MenuOption {
         private final String description;
         private final char optionChar;
-        private Object value;
+        private final Object value;
 
         public MenuOption(String description, char optionChar, Object value) {
             this.description = description;
