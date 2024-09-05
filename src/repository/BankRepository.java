@@ -55,9 +55,9 @@ public class BankRepository {
         return null;
     }
 
-    public boolean createAccount(String OwnerId) {
+    public boolean createAccount(String OwnerId, String password) {
 
-        Account newAccount = new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId);
+        Account newAccount = new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
 
         accountList.add(newAccount);
         saveData();

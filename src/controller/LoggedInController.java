@@ -3,6 +3,7 @@ package controller;
 import enums.LoggedInOption;
 import enums.State;
 import exception.DataInputInterruptedException;
+import exception.DuplicateCPFException;
 import model.Account;
 import repository.BankRepository;
 import state.AppState;
@@ -71,11 +72,28 @@ public class LoggedInController {
 
     private void openNewAccount() {
         // Implementar
-        String userCPF = appState.getLoggedUserId();
-        bankRepository.createAccount(userCPF);
+        Output.info("Abrir conta");
+        Output.message("Digite 'cancel' para retornar...");
+        Output.info("Senha deve ter 4 números...");
 
-        Output.info("Conta criada!");
-        scanner.nextLine();
+        try {
+            String password = Input.getAsAccountPassword(scanner, "Digite a senha: ", false, true);
+            String passwordConfirm = Input.getAsString(scanner, "Confirme a senha: ", true, true);
+
+            if (!password.equals(passwordConfirm)) {
+                Output.error("As senhas não são iguais! Por favor, tente novamente...");
+                scanner.nextLine();
+            } else {
+                String userCPF = appState.getLoggedUserId();
+                bankRepository.createAccount(userCPF, password);
+
+                Output.info("Conta criada!");
+                scanner.nextLine();
+            }
+        } catch (DataInputInterruptedException e) {
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
+        }
     }
 
     private void showAccountList() {
@@ -90,6 +108,7 @@ public class LoggedInController {
             String description = String.format("[%s] - %s", optionChar, accountList.get(i).getNumber());
             accountOptions.add(new MenuUtils.MenuOption(description, optionChar, accountList.get(i).getNumber()));
         }
+        accountOptions.add(new MenuUtils.MenuOption("[9] - Voltar", '9', null));
 
         MenuUtils.showMenu(accountOptions, "Qual conta deseja acessar?");
 
@@ -105,6 +124,8 @@ public class LoggedInController {
         }
 
         if (selectedOption != null) {
+            if (selectedOption.getOptionChar() == '9') return;
+
             System.out.println("Você selecionou a conta: " + selectedOption.getDescription());
         } else {
             System.out.println("Opção inválida! Tente novamente.");

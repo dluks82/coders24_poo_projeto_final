@@ -109,7 +109,7 @@ public class Input {
         }
     }
 
-    public static String getAsPassword(Scanner scanner, String promptMessage, boolean canBeEmpty, boolean hidden) {
+    public static String getAsUserPassword(Scanner scanner, String promptMessage, boolean canBeEmpty, boolean hidden) {
         while (true) {
             Output.prompt(promptMessage);
             try {
@@ -121,7 +121,7 @@ public class Input {
 
                 if (value.isEmpty() && canBeEmpty) return value;
 
-                if (Validator.isValidPassword(value)) return value;
+                if (Validator.isValidUserPassword(value)) return value;
 
             } catch (InvalidPasswordException e) {
                 Output.error(e.getMessage());
@@ -130,4 +130,24 @@ public class Input {
         }
     }
 
+    public static String getAsAccountPassword(Scanner scanner, String promptMessage, boolean canBeEmpty, boolean hidden) {
+        while (true) {
+            Output.prompt(promptMessage);
+            try {
+                if (hidden) System.out.print(Color.WHITE.getCode() + Color.BG_WHITE.getCode());
+                String value = scanner.nextLine().trim();
+                if (hidden) System.out.print(Color.RESET.getCode());
+
+                if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
+
+                if (value.isEmpty() && canBeEmpty) return value;
+
+                if (Validator.isValidAccountPassword(value)) return value;
+
+            } catch (InvalidPasswordException e) {
+                Output.error(e.getMessage());
+                System.out.println(emptyLine);
+            }
+        }
+    }
 }

@@ -33,7 +33,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        if (Validator.isValidPassword(password))
+        if (Validator.isValidUserPassword(password))
             this.password = hashPassword(password);
     }
 
