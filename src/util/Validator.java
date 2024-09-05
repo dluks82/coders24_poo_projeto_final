@@ -41,7 +41,7 @@ public class Validator {
         return cpfDigits[10] == secondVerifier;
     }
 
-    public static boolean isValidPassword(String password) {
+    public static boolean isValidUserPassword(String password) {
         if (password.length() < 8) {
             throw new InvalidPasswordException("A senha deve ter pelo menos 8 caracteres.");
         }
@@ -60,6 +60,15 @@ public class Validator {
 
         if (!password.matches(".*[!@#$%^&*()-+=].*")) {
             throw new InvalidPasswordException("A senha deve conter pelo menos um caractere especial (!@#$%^&*()-+=).");
+        }
+
+        return true;
+    }
+
+    public static boolean isValidAccountPassword(String password) {
+
+        if (!password.matches("^[0-9]{4}$")) {
+            throw new InvalidPasswordException("A senha deve ter exatamente 4 dígitos numéricos.");
         }
 
         return true;

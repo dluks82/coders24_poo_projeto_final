@@ -103,7 +103,7 @@ public class UpdateController {
         Output.message("Digite 'cancel' para retornar...");
 
         try {
-            String password = Input.getAsPassword(scanner, "Digite a nova senha: ", true, true);
+            String password = Input.getAsUserPassword(scanner, "Digite a nova senha: ", true, true);
             if (!password.isEmpty()) {
                 String passwordConfirm = Input.getAsString(scanner, "Confirme a nova senha: ", true, true);
 

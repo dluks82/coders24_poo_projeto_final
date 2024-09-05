@@ -69,7 +69,7 @@ public class NotLoggedInController {
             if (bankRepository.getUser(cpf) != null) throw new DuplicateCPFException();
 
             String name = Input.getAsString(scanner, "Digite o nome: ", false, false);
-            String password = Input.getAsPassword(scanner, "Digite a senha: ", false, true);
+            String password = Input.getAsUserPassword(scanner, "Digite a senha: ", false, true);
 
             String passwordConfirm = Input.getAsString(scanner, "Confirme a senha: ", true, true);
 
