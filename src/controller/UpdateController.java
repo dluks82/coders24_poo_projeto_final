@@ -26,13 +26,13 @@ public class UpdateController {
 
     public void run() {
         List<MenuUtils.MenuOption> updateMenuOptions = Arrays.asList(
-                new MenuUtils.MenuOption(UpdateUserOption.NAME.getText(), UpdateUserOption.NAME.getLetter()),
-                new MenuUtils.MenuOption(UpdateUserOption.PASSWORD.getText(), UpdateUserOption.PASSWORD.getLetter()),
-                new MenuUtils.MenuOption(UpdateUserOption.BACK.getText(), UpdateUserOption.BACK.getLetter())
+                new MenuUtils.MenuOption(UpdateUserOption.NAME.getText(), UpdateUserOption.NAME.getLetter(), null),
+                new MenuUtils.MenuOption(UpdateUserOption.PASSWORD.getText(), UpdateUserOption.PASSWORD.getLetter(), null),
+                new MenuUtils.MenuOption(UpdateUserOption.BACK.getText(), UpdateUserOption.BACK.getLetter(), null)
         );
 
         while (appState.getCurrentState() == State.UPDATE_INFO) {
-            UpdateUserOption selectedOption = null;
+            UpdateUserOption selectedOption;
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());

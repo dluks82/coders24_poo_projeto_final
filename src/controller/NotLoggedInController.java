@@ -26,13 +26,13 @@ public class NotLoggedInController {
 
     public void run() {
         List<MenuUtils.MenuOption> notLoggedMenuOptions = Arrays.asList(
-                new MenuUtils.MenuOption(NotLoggedInOption.LOGIN.getText(), NotLoggedInOption.LOGIN.getLetter()),
-                new MenuUtils.MenuOption(NotLoggedInOption.REGISTER.getText(), NotLoggedInOption.REGISTER.getLetter()),
-                new MenuUtils.MenuOption(NotLoggedInOption.EXIT.getText(), NotLoggedInOption.EXIT.getLetter())
+                new MenuUtils.MenuOption(NotLoggedInOption.LOGIN.getText(), NotLoggedInOption.LOGIN.getLetter(), null),
+                new MenuUtils.MenuOption(NotLoggedInOption.REGISTER.getText(), NotLoggedInOption.REGISTER.getLetter(), null),
+                new MenuUtils.MenuOption(NotLoggedInOption.EXIT.getText(), NotLoggedInOption.EXIT.getLetter(), null)
         );
 
         while (appState.getCurrentState() == State.NOT_LOGGED_IN) {
-            NotLoggedInOption selectedOption = null;
+            NotLoggedInOption selectedOption;
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());

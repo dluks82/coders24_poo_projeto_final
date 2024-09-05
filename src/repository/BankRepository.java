@@ -5,20 +5,24 @@ import data.DataPersistence;
 import model.Account;
 import model.User;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BankRepository {
     private final List<User> userList;
     private final List<Account> accountList;
+    private int lastAccountNumber;
 
     public BankRepository() {
         DataWrapper dataWrapper = DataPersistence.load();
         this.userList = dataWrapper.userList();
         this.accountList = dataWrapper.accountList();
+        this.lastAccountNumber = dataWrapper.lastAccountNumber();
     }
 
     private void saveData() {
-        DataPersistence.save(new DataWrapper(userList, accountList));
+        DataPersistence.save(new DataWrapper(userList, accountList, lastAccountNumber));
     }
 
     public boolean createUser(User user) {
@@ -51,8 +55,44 @@ public class BankRepository {
         return null;
     }
 
-    public void createAccount(Account account) {
-        accountList.add(account);
+    public boolean createAccount(String OwnerId) {
+
+        Account newAccount = new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId);
+
+        accountList.add(newAccount);
+        saveData();
+
+        return true;
+    }
+
+    public List<Account> getUserAccountList(String ownerId) {
+        List<Account> list = new ArrayList<>();
+
+        for (Account account : accountList) {
+            if (account.getOwnerId().equals(ownerId)) {
+                list.add(account);
+            }
+        }
+        return list;
+    }
+
+
+    public String accountNumberGenerator() {
+        int nextAccountNumber = (int) (lastAccountNumber + Math.ceil(Math.random() * 10));
+        int checkDigit = calculateCheckDigit(nextAccountNumber);
+
+        lastAccountNumber = nextAccountNumber;
+
+        return String.format("%d-%d", nextAccountNumber, checkDigit);
+    }
+
+    private int calculateCheckDigit(int nextAccountNumber) {
+        int sum = 0;
+        while (nextAccountNumber > 0) {
+            sum += nextAccountNumber % 10;
+            nextAccountNumber /= 10;
+        }
+        return sum % 10;
     }
 
 }

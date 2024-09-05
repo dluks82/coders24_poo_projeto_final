@@ -1,7 +1,6 @@
 package controller;
 
 import enums.AccountOption;
-import enums.LoggedInOption;
 import enums.State;
 import exception.DataInputInterruptedException;
 import repository.BankRepository;
@@ -26,15 +25,15 @@ public class AccountController {
 
     public void run() {
         List<MenuUtils.MenuOption> accountMenuOptions = Arrays.asList(
-                new MenuUtils.MenuOption(AccountOption.DEPOSIT.getText(), AccountOption.DEPOSIT.getLetter()),
-                new MenuUtils.MenuOption(AccountOption.WITHDRAW.getText(), AccountOption.WITHDRAW.getLetter()),
-                new MenuUtils.MenuOption(AccountOption.TRANSFER.getText(), AccountOption.TRANSFER.getLetter()),
-                new MenuUtils.MenuOption(AccountOption.CHECK_BALANCE.getText(), AccountOption.CHECK_BALANCE.getLetter()),
-                new MenuUtils.MenuOption(AccountOption.EXIT.getText(), AccountOption.EXIT.getLetter())
+                new MenuUtils.MenuOption(AccountOption.DEPOSIT.getText(), AccountOption.DEPOSIT.getLetter(), null),
+                new MenuUtils.MenuOption(AccountOption.WITHDRAW.getText(), AccountOption.WITHDRAW.getLetter(), null),
+                new MenuUtils.MenuOption(AccountOption.TRANSFER.getText(), AccountOption.TRANSFER.getLetter(), null),
+                new MenuUtils.MenuOption(AccountOption.CHECK_BALANCE.getText(), AccountOption.CHECK_BALANCE.getLetter(), null),
+                new MenuUtils.MenuOption(AccountOption.EXIT.getText(), AccountOption.EXIT.getLetter(), null)
         );
 
         while (appState.getCurrentState() == State.ACCOUNT_MANAGEMENT) {
-            AccountOption selectedOption = null;
+            AccountOption selectedOption;
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());

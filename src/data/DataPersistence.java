@@ -34,7 +34,7 @@ public class DataPersistence {
     public static DataWrapper load() {
         File file = new File("database.json");
         if (!file.exists()) {
-            return new DataWrapper(new ArrayList<>(), new ArrayList<>());
+            return new DataWrapper(new ArrayList<>(), new ArrayList<>(), 1000);
         }
 
         try (FileReader fileReader = new FileReader(file)) {
