@@ -2,6 +2,7 @@ package controller;
 
 import enums.LoggedInOption;
 import enums.State;
+import enums.AccountTypeOption;
 import exception.DataInputInterruptedException;
 import exception.DuplicateCPFException;
 import model.Account;
@@ -71,8 +72,26 @@ public class LoggedInController {
     }
 
     private void openNewAccount() {
+
+        AccountTypeOption selectedOption;
+        List<MenuUtils.MenuOption> accountTypesMenuOptions = Arrays.asList(
+                new MenuUtils.MenuOption(
+                        AccountTypeOption.CURRENT_ACCOUNT.getText(),
+                        AccountTypeOption.CURRENT_ACCOUNT.getLetter(),
+                        null),
+                new MenuUtils.MenuOption(
+                        AccountTypeOption.SAVINGS_ACCOUNT.getText(),
+                        AccountTypeOption.SAVINGS_ACCOUNT.getLetter(),
+                        null)
+        );
+
         // Implementar
         Output.info("Abrir conta");
+
+        MenuUtils.showMenu(accountTypesMenuOptions, "Qual tipo de conta você deseja?");
+        String userInput = Input.getAsString(scanner, "Opção: ", false, false);
+        selectedOption = AccountTypeOption.fromUserInput(userInput);
+
         Output.message("Digite 'cancel' para retornar...");
         Output.info("Senha deve ter 4 números...");
 
@@ -85,9 +104,12 @@ public class LoggedInController {
                 scanner.nextLine();
             } else {
                 String userCPF = appState.getLoggedUserId();
-                bankRepository.createAccount(userCPF, password);
-
-                Output.info("Conta criada!");
+                boolean statusCreateAccount = bankRepository.createAccount(userCPF, password, selectedOption);
+                if (statusCreateAccount) {
+                    Output.info("Conta criada!");
+                } else {
+                    Output.info("Erro ao criar conta!");
+                }
                 scanner.nextLine();
             }
         } catch (DataInputInterruptedException e) {
