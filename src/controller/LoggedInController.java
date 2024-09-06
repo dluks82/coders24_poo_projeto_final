@@ -104,9 +104,12 @@ public class LoggedInController {
                 scanner.nextLine();
             } else {
                 String userCPF = appState.getLoggedUserId();
-                bankRepository.createAccount(userCPF, password, selectedOption);
-
-                Output.info("Conta criada!");
+                boolean statusCreateAccount = bankRepository.createAccount(userCPF, password, selectedOption);
+                if (statusCreateAccount) {
+                    Output.info("Conta criada!");
+                } else {
+                    Output.info("Erro ao criar conta!");
+                }
                 scanner.nextLine();
             }
         } catch (DataInputInterruptedException e) {

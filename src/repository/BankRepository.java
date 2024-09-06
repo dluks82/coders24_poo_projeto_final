@@ -58,6 +58,8 @@ public class BankRepository {
 
     public boolean createAccount(String OwnerId, String password, AccountTypeOption accountType) {
 
+        if (accountType == null) return false;
+
         Account newAccount = switch (accountType) {
             case CURRENT_ACCOUNT -> new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
             case SAVINGS_ACCOUNT -> new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
