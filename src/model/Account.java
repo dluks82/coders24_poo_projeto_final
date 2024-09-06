@@ -1,10 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Account {
+public abstract class Account implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String number;
     private BigDecimal balance;
     private String ownerId;
