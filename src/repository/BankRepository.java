@@ -2,6 +2,7 @@ package repository;
 
 import data.DataWrapper;
 import data.DataPersistence;
+import enums.AccountTypeOption;
 import model.Account;
 import model.User;
 
@@ -55,9 +56,12 @@ public class BankRepository {
         return null;
     }
 
-    public boolean createAccount(String OwnerId, String password) {
+    public boolean createAccount(String OwnerId, String password, AccountTypeOption accountType) {
 
-        Account newAccount = new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
+        Account newAccount = switch (accountType) {
+            case CURRENT_ACCOUNT -> new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
+            case SAVINGS_ACCOUNT -> new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
+        };
 
         accountList.add(newAccount);
         saveData();
