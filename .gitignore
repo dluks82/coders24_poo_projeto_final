@@ -4,8 +4,6 @@ out/
 !**/src/test/**/out/
 .idea
 
-database.json
-
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -31,3 +29,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 /database.json
+/database.ser

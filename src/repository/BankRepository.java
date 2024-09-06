@@ -11,6 +11,7 @@ import model.User;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BankRepository {
     private final List<User> userList;
@@ -19,13 +20,17 @@ public class BankRepository {
 
     public BankRepository() {
         DataWrapper dataWrapper = DataPersistence.load();
-        this.userList = dataWrapper.userList();
-        this.accountList = dataWrapper.accountList();
-        this.lastAccountNumber = dataWrapper.lastAccountNumber();
+
+        this.userList = dataWrapper.users();
+        this.accountList = dataWrapper.accounts();
+
+        Object lastNumberObj = dataWrapper.config().get("lastAccountNumber");
+        this.lastAccountNumber = (lastNumberObj instanceof Integer) ? (Integer) lastNumberObj : 1000;
     }
 
     private void saveData() {
-        DataPersistence.save(new DataWrapper(userList, accountList, lastAccountNumber));
+        Map<String, Object> config = Map.of("lastAccountNumber", lastAccountNumber);
+        DataPersistence.save(new DataWrapper(userList, accountList, config));
     }
 
     public boolean createUser(User user) {

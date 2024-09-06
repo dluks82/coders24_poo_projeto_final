@@ -2,10 +2,13 @@ package model;
 
 import util.Validator;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String cpf;
     private String name;
     private String password;
@@ -33,8 +36,11 @@ public class User {
     }
 
     public void setPassword(String password) {
-        if (Validator.isValidUserPassword(password))
+        if (Validator.isValidUserPassword(password)) {
             this.password = hashPassword(password);
+        } else {
+            throw new IllegalArgumentException("Senha inválida!");
+        }
     }
 
     public boolean validPassword(String password) {
