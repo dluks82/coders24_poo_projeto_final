@@ -3,12 +3,17 @@ package controller;
 import enums.AccountOption;
 import enums.State;
 import exception.DataInputInterruptedException;
+import model.CurrentAccount;
+import model.SavingsAccount;
 import repository.BankRepository;
 import state.AppState;
 import ui.*;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class AccountController {
@@ -37,7 +42,17 @@ public class AccountController {
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());
-            MenuUtils.showMenu(accountMenuOptions, "Operações de conta");
+            String accountNumber = appState.getLoggedInAccount().getNumber();
+            String accountType;
+            if (appState.getLoggedInAccount() instanceof SavingsAccount) {
+                accountType = "Poupança";
+            } else if (appState.getLoggedInAccount() instanceof CurrentAccount) {
+                accountType = "Corrente";
+            } else {
+                accountType = "Desconhecida";
+            }
+
+            MenuUtils.showMenu(accountMenuOptions, "Conta " + accountType, "Número: " + accountNumber);
 
             try {
                 String userInput = Input.getAsString(scanner, "Opção: ", false, false);
@@ -46,10 +61,10 @@ public class AccountController {
 
                 if (selectedOption != null) {
                     switch (selectedOption) {
-                        case DEPOSIT -> System.out.println("Implementar...");
-                        case WITHDRAW -> System.out.println("Implementar...");
+                        case DEPOSIT -> handleDeposit();
+                        case WITHDRAW -> handleWithdraw();
                         case TRANSFER -> System.out.println("Implementar...");
-                        case CHECK_BALANCE -> System.out.println("Implementar...");
+                        case CHECK_BALANCE -> showResume();
                         case EXIT -> {
                             if (appState.getLoggedInUser() != null) {
                                 appState.setCurrentState(State.LOGGED_IN);
@@ -68,5 +83,73 @@ public class AccountController {
                 scanner.nextLine();
             }
         }
+    }
+
+    private void handleWithdraw() {
+        Output.info("Sacar");
+        Output.message("Digite 'cancel' para retornar...");
+
+        try {
+            String accountNumber = appState.getLoggedInAccount().getNumber();
+            BigDecimal amount =
+                    Input.getAsBigDecimal(scanner,
+                            "Digite o valor do saque: ", false);
+
+            String password = Input.getAsString(scanner, "Digite a senha da conta: ", false, true);
+
+            boolean withdrawResult = bankRepository.withdrawal(accountNumber, password, amount);
+
+            if (withdrawResult) {
+                Output.info("Saque realizado.");
+                scanner.nextLine();
+            } else {
+                Output.info("Erro ao realizar saque.");
+                scanner.nextLine();
+            }
+
+        } catch (DataInputInterruptedException e) {
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
+        }
+    }
+
+    private void handleDeposit() {
+        Output.info("Depositar");
+        Output.message("Digite 'cancel' para retornar...");
+
+        try {
+            String accountNumber = appState.getLoggedInAccount().getNumber();
+            BigDecimal amount =
+                    Input.getAsBigDecimal(scanner,
+                            "Digite o valor do depósito: ", false);
+
+            boolean depositResult = bankRepository.deposit(accountNumber, amount);
+
+            if (depositResult) {
+                Output.info("Depósito realizado.");
+                scanner.nextLine();
+            } else {
+                Output.info("Erro ao realizar depósito.");
+                scanner.nextLine();
+            }
+
+        } catch (DataInputInterruptedException e) {
+            Output.info("Operação cancelada!");
+            scanner.nextLine();
+        }
+    }
+
+    private void showResume() {
+        String currentAccountNumber = appState.getLoggedInAccount().getNumber();
+        BigDecimal accountBalance = bankRepository.getAccountBalance(currentAccountNumber);
+
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("pt-BR"));
+        String formattedBalance = currencyFormatter.format(accountBalance);
+
+        Output.info("Saldo da Conta: " + currentAccountNumber);
+        Output.message(formattedBalance);
+
+
+        scanner.nextLine();
     }
 }

@@ -5,6 +5,7 @@ import exception.DataInputInterruptedException;
 import exception.InvalidPasswordException;
 import util.Validator;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class Input {
@@ -44,6 +45,29 @@ public class Input {
                 double parsedValue = Double.parseDouble(value);
                 if (parsedValue >= 0 || canBeNegative) {
                     return parsedValue;
+                }
+                Output.error("Não pode ser negativo!");
+                System.out.println(emptyLine);
+            } catch (NumberFormatException e) {
+                Output.error("Valor inválido! Por favor tente novamente...");
+                System.out.println(emptyLine);
+            }
+        }
+    }
+
+    public static BigDecimal getAsBigDecimal(Scanner scanner, String promptMessage, boolean canBeNegative) {
+        while (true) {
+            Output.prompt(promptMessage);
+            try {
+                String value = scanner.nextLine();
+
+                if (value.equalsIgnoreCase("cancel")) throw new DataInputInterruptedException();
+
+                double parsedValue = Double.parseDouble(value);
+
+                BigDecimal BDValue = BigDecimal.valueOf(parsedValue);
+                if (BDValue.compareTo(BigDecimal.ZERO) >= 0 || canBeNegative) {
+                    return BDValue;
                 }
                 Output.error("Não pode ser negativo!");
                 System.out.println(emptyLine);

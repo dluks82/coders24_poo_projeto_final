@@ -42,7 +42,7 @@ public class LoggedInController {
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());
-            MenuUtils.showMenu(loggedInMenuOptions, "O que deseja fazer?");
+            MenuUtils.showMenu(loggedInMenuOptions, "O que deseja fazer?", null);
 
             try {
                 String userInput = Input.getAsString(scanner, "Opção: ", false, false);
@@ -88,7 +88,7 @@ public class LoggedInController {
         // Implementar
         Output.info("Abrir conta");
 
-        MenuUtils.showMenu(accountTypesMenuOptions, "Qual tipo de conta você deseja?");
+        MenuUtils.showMenu(accountTypesMenuOptions, "Qual tipo de conta você deseja?",null);
         String userInput = Input.getAsString(scanner, "Opção: ", false, false);
         selectedOption = AccountTypeOption.fromUserInput(userInput);
 
@@ -132,7 +132,7 @@ public class LoggedInController {
         }
         accountOptions.add(new MenuUtils.MenuOption("[9] - Voltar", '9', null));
 
-        MenuUtils.showMenu(accountOptions, "Qual conta deseja acessar?");
+        MenuUtils.showMenu(accountOptions, "Qual conta deseja acessar?", null);
 
         String userInput = Input.getAsString(scanner, "Opção: ", true, false);
 

@@ -87,6 +87,39 @@ public class BankRepository {
         return null;
     }
 
+    public boolean deposit(String accountNumber, BigDecimal amount) {
+        Account account = getAccount(accountNumber);
+        boolean result = false;
+
+        if (account != null) {
+            result = account.deposit(amount);
+
+            saveData();
+        }
+        return result;
+    }
+
+    public boolean withdrawal(String accountNumber, String password, BigDecimal amount) {
+        Account account = getAccount(accountNumber);
+        boolean result = false;
+
+        if (account != null && account.validPassword(password)) {
+            result = account.withdrawal(amount);
+            saveData();
+        }
+        return result;
+    }
+
+    public BigDecimal getAccountBalance(String accountNumber) {
+        Account account = getAccount(accountNumber);
+
+        if (account != null) {
+            return account.getBalance();
+        }
+
+        return BigDecimal.ZERO;
+    }
+
     public List<Account> getUserAccountList(String ownerId) {
         List<Account> list = new ArrayList<>();
 
