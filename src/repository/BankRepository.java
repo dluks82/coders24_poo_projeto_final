@@ -4,6 +4,8 @@ import data.DataWrapper;
 import data.DataPersistence;
 import enums.AccountTypeOption;
 import model.Account;
+import model.CurrentAccount;
+import model.SavingsAccount;
 import model.User;
 
 import java.math.BigDecimal;
@@ -61,8 +63,8 @@ public class BankRepository {
         if (accountType == null) return false;
 
         Account newAccount = switch (accountType) {
-            case CURRENT_ACCOUNT -> new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
-            case SAVINGS_ACCOUNT -> new Account(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
+            case CURRENT_ACCOUNT -> new CurrentAccount(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
+            case SAVINGS_ACCOUNT -> new SavingsAccount(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
         };
 
         accountList.add(newAccount);
@@ -90,7 +92,6 @@ public class BankRepository {
         }
         return list;
     }
-
 
     public String accountNumberGenerator() {
         int nextAccountNumber = (int) (lastAccountNumber + Math.ceil(Math.random() * 10));
