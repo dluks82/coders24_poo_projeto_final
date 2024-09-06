@@ -2,7 +2,7 @@ package enums;
 
 public enum AccountTypeOption {
     CURRENT_ACCOUNT("1", 'C', "Corrente"),
-    SAVINGS_ACCOUNT("2", 'C', "Poupança");
+    SAVINGS_ACCOUNT("2", 'P', "Poupança");
 
     private final String number;
     private final char letter;
