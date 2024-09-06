@@ -36,7 +36,7 @@ public class UpdateController {
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());
-            MenuUtils.showMenu(updateMenuOptions, "Dados do usuário");
+            MenuUtils.showMenu(updateMenuOptions, "Dados do usuário", null);
 
             showCurrentUserData();
 

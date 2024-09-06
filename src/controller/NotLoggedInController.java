@@ -38,7 +38,7 @@ public class NotLoggedInController {
 
             Screen.clear();
             Header.show(appState.getLoggedInUserName());
-            MenuUtils.showMenu(notLoggedMenuOptions, "Menu Inicial");
+            MenuUtils.showMenu(notLoggedMenuOptions, "Menu Inicial", null);
 
             try {
                 String userInput = Input.getAsString(scanner, "Opção: ", false, false);
@@ -81,6 +81,8 @@ public class NotLoggedInController {
 
             if (account == null || !account.validPassword(accountPassword)) {
                 Output.error("Conta ou senha incorreta!");
+                scanner.nextLine();
+                return;
             }
 
             appState.setLoggedInAccount(account);

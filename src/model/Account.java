@@ -48,6 +48,29 @@ public abstract class Account implements Serializable {
         this.password = hashPassword(password);
     }
 
+    public boolean deposit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Valor não pode ser negativo!");
+        }
+
+        this.balance = this.balance.add(amount);
+        return true;
+    }
+
+    public boolean withdrawal(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Valor não pode ser negativo!");
+        }
+        if (amount.compareTo(this.balance) <= 0) {
+            this.balance = this.balance.subtract(amount);
+            return true;
+        } else {
+            // lançar uma exceção
+            return false;
+        }
+    }
+
+
     @Override
     public String toString() {
         return "Account{" +
