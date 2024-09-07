@@ -171,6 +171,8 @@ public class LoggedInController {
 
             if (account == null || !account.validPassword(accountPassword)) {
                 Output.error("Conta ou senha incorreta!");
+                scanner.nextLine();
+                return;
             }
 
             appState.setLoggedInAccount(account);
