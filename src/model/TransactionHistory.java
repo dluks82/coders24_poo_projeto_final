@@ -42,4 +42,14 @@ public class TransactionHistory implements Serializable {
         return dateTime;
     }
 
+    @Override
+    public String toString() {
+        return "TransactionHistory{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", transactionType='" + transactionType + '\'' +
+                ", amount=" + amount +
+                ", status=" + status +
+                ", dateTime=" + dateTime +
+                '}';
+    }
 }

@@ -5,6 +5,7 @@ import enums.State;
 import exception.DataInputInterruptedException;
 import model.CurrentAccount;
 import model.SavingsAccount;
+import model.TransactionHistory;
 import repository.BankRepository;
 import state.AppState;
 import ui.*;
@@ -34,6 +35,7 @@ public class AccountController {
                 new MenuUtils.MenuOption(AccountOption.WITHDRAW.getText(), AccountOption.WITHDRAW.getLetter(), null),
                 new MenuUtils.MenuOption(AccountOption.TRANSFER.getText(), AccountOption.TRANSFER.getLetter(), null),
                 new MenuUtils.MenuOption(AccountOption.CHECK_BALANCE.getText(), AccountOption.CHECK_BALANCE.getLetter(), null),
+                new MenuUtils.MenuOption(AccountOption.CHECK_EXTRACT.getText(), AccountOption.CHECK_EXTRACT.getLetter(), null),
                 new MenuUtils.MenuOption(AccountOption.EXIT.getText(), AccountOption.EXIT.getLetter(), null)
         );
 
@@ -65,6 +67,7 @@ public class AccountController {
                         case WITHDRAW -> handleWithdraw();
                         case TRANSFER -> System.out.println("Implementar...");
                         case CHECK_BALANCE -> showResume();
+                        case CHECK_EXTRACT -> showExtract();
                         case EXIT -> {
                             if (appState.getLoggedInUser() != null) {
                                 appState.setCurrentState(State.LOGGED_IN);
@@ -149,7 +152,20 @@ public class AccountController {
         Output.info("Saldo da Conta: " + currentAccountNumber);
         Output.message(formattedBalance);
 
-
         scanner.nextLine();
     }
+
+    private void showExtract() {
+
+        String accountNumber = appState.getLoggedInAccount().getNumber();
+        List<TransactionHistory> transactionList = bankRepository.getTransactionHistoryList(accountNumber);
+
+        for (TransactionHistory transactionHistory : transactionList) {
+            Output.message(transactionHistory.toString());
+        }
+
+        scanner.nextLine();
+
+    }
+
 }
