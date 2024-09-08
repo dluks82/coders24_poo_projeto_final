@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 
 public class TransactionHistory {
 
-    private int accountNumber;
+    private String accountNumber;
     private String transactionType;
     private BigDecimal amount;
     private boolean status;
     private LocalDateTime dateTime;
 
-    public TransactionHistory(int accountNumber, AccountOption transactionType, BigDecimal amount, boolean status) {
+    public TransactionHistory(String accountNumber, AccountOption transactionType, BigDecimal amount, boolean status) {
         this.accountNumber = accountNumber;
         this.transactionType = transactionType.getDescription();
         this.amount = amount;
@@ -21,7 +21,7 @@ public class TransactionHistory {
         this.dateTime = LocalDateTime.now();
     }
 
-    public int getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 
