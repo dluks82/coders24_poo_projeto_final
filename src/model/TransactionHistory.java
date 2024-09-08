@@ -2,10 +2,11 @@ package model;
 
 import enums.AccountOption;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TransactionHistory {
+public class TransactionHistory implements Serializable {
 
     private String accountNumber;
     private String transactionType;
