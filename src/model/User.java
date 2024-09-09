@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String cpf;
+    private final String cpf;
     private String name;
     private String password;
 
@@ -21,10 +21,6 @@ public class User implements Serializable {
 
     public String getCpf() {
         return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public String getName() {
