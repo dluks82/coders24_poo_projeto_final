@@ -68,8 +68,8 @@ public class BankRepository {
         if (accountType == null) return false;
 
         Account newAccount = switch (accountType) {
-            case CURRENT_ACCOUNT -> new CurrentAccount(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
-            case SAVINGS_ACCOUNT -> new SavingsAccount(accountNumberGenerator(), BigDecimal.ZERO, OwnerId, password);
+            case CURRENT_ACCOUNT -> new CurrentAccount(accountNumberGenerator(), OwnerId, password);
+            case SAVINGS_ACCOUNT -> new SavingsAccount(accountNumberGenerator(), OwnerId, password);
         };
 
         accountList.add(newAccount);
