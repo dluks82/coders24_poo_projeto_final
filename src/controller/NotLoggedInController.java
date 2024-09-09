@@ -28,8 +28,9 @@ public class NotLoggedInController {
     public void run() {
         List<MenuUtils.MenuOption> notLoggedMenuOptions = Arrays.asList(
                 new MenuUtils.MenuOption(NotLoggedInOption.LOGIN.getText(), NotLoggedInOption.LOGIN.getLetter(), null),
-                new MenuUtils.MenuOption(NotLoggedInOption.ACCESS_ACCOUNT.getText(), NotLoggedInOption.ACCESS_ACCOUNT.getLetter(), null),
                 new MenuUtils.MenuOption(NotLoggedInOption.REGISTER.getText(), NotLoggedInOption.REGISTER.getLetter(), null),
+                new MenuUtils.MenuOption(NotLoggedInOption.ACCESS_ACCOUNT.getText(), NotLoggedInOption.ACCESS_ACCOUNT.getLetter(), null),
+                new MenuUtils.MenuOption(NotLoggedInOption.ABOUT.getText(), NotLoggedInOption.ABOUT.getLetter(), null),
                 new MenuUtils.MenuOption(NotLoggedInOption.EXIT.getText(), NotLoggedInOption.EXIT.getLetter(), null)
         );
 
@@ -48,8 +49,9 @@ public class NotLoggedInController {
                 if (selectedOption != null) {
                     switch (selectedOption) {
                         case LOGIN -> loginUser();
-                        case ACCESS_ACCOUNT -> accessAccount();
                         case REGISTER -> registerNewUser();
+                        case ACCESS_ACCOUNT -> accessAccount();
+                        case ABOUT -> showAbout();
                         case EXIT -> appState.setCurrentState(State.EXIT);
                     }
                 } else {
@@ -61,6 +63,13 @@ public class NotLoggedInController {
                 scanner.nextLine();
             }
         }
+    }
+
+    private void showAbout() {
+        Screen.clear();
+        About.show();
+        Output.info("Enter para continuar...");
+        scanner.nextLine();
     }
 
     private void accessAccount() {
