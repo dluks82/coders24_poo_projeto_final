@@ -65,7 +65,10 @@ public class AccountController {
                     switch (selectedOption) {
                         case DEPOSIT -> handleDeposit();
                         case WITHDRAW -> handleWithdraw();
-                        case TRANSFER -> System.out.println("Implementar...");
+                        case TRANSFER -> {
+                            System.out.println("Implementar...");
+                            scanner.nextLine();
+                        }
                         case CHECK_BALANCE -> showResume();
                         case CHECK_EXTRACT -> showExtract();
                         case EXIT -> {
@@ -152,20 +155,20 @@ public class AccountController {
         Output.info("Saldo da Conta: " + currentAccountNumber);
         Output.message(formattedBalance);
 
+        Output.info("Enter para continuar...");
         scanner.nextLine();
     }
 
     private void showExtract() {
-
         String accountNumber = appState.getLoggedInAccount().getNumber();
         List<TransactionHistory> transactionList = bankRepository.getTransactionHistoryList(accountNumber);
 
-        for (TransactionHistory transactionHistory : transactionList) {
-            Output.message(transactionHistory.toString());
-        }
+        Output.info("Extrato:");
 
+        Output.extract(transactionList);
+
+        Output.info("Enter para continuar...");
         scanner.nextLine();
-
     }
 
 }
