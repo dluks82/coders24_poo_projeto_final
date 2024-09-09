@@ -4,6 +4,7 @@ import data.DataWrapper;
 import data.DataPersistence;
 import enums.AccountOption;
 import enums.AccountTypeOption;
+import exception.InsufficientBalanceException;
 import model.*;
 
 import java.math.BigDecimal;
@@ -64,7 +65,6 @@ public class BankRepository {
     }
 
     public boolean createAccount(String OwnerId, String password, AccountTypeOption accountType) {
-
         if (accountType == null) return false;
 
         Account newAccount = switch (accountType) {
@@ -122,7 +122,7 @@ public class BankRepository {
         return result;
     }
 
-    public boolean withdrawal(String accountNumber, String password, BigDecimal amount) {
+    public boolean withdrawal(String accountNumber, String password, BigDecimal amount) throws InsufficientBalanceException {
         Account account = getAccount(accountNumber);
         boolean result = false;
 
