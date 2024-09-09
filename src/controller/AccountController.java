@@ -3,6 +3,7 @@ package controller;
 import enums.AccountOption;
 import enums.State;
 import exception.DataInputInterruptedException;
+import exception.InsufficientBalanceException;
 import model.CurrentAccount;
 import model.SavingsAccount;
 import model.TransactionHistory;
@@ -87,6 +88,9 @@ public class AccountController {
             } catch (DataInputInterruptedException e) {
                 Output.info("Opção inválida! Por favor, informe uma opção do menu...");
                 scanner.nextLine();
+            } catch (Exception e) {
+                Output.error(e.getMessage());
+                scanner.nextLine();
             }
         }
     }
@@ -113,8 +117,14 @@ public class AccountController {
                 scanner.nextLine();
             }
 
+        } catch (InsufficientBalanceException e) {
+            Output.error(e.getMessage());
+            scanner.nextLine();
         } catch (DataInputInterruptedException e) {
             Output.info("Operação cancelada!");
+            scanner.nextLine();
+        } catch (Exception e) {
+            Output.error(e.getMessage());
             scanner.nextLine();
         }
     }
@@ -141,6 +151,9 @@ public class AccountController {
 
         } catch (DataInputInterruptedException e) {
             Output.info("Operação cancelada!");
+            scanner.nextLine();
+        } catch (Exception e) {
+            Output.error(e.getMessage());
             scanner.nextLine();
         }
     }
