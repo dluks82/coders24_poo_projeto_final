@@ -5,8 +5,10 @@ import enums.AccountOption;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TransactionHistory implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String accountNumber;
     private String transactionType;
@@ -42,14 +44,17 @@ public class TransactionHistory implements Serializable {
         return dateTime;
     }
 
+    public static String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return dateTime.format(formatter);
+    }
+
     @Override
     public String toString() {
-        return "TransactionHistory{" +
-                "accountNumber='" + accountNumber + '\'' +
-                ", transactionType='" + transactionType + '\'' +
-                ", amount=" + amount +
-                ", status=" + status +
-                ", dateTime=" + dateTime +
-                '}';
+        return "Data: " + formatDateTime(dateTime) + " | " +
+                "Numero da conta: " + accountNumber + " | " +
+                "Valor: " + amount + " | " +
+                "Status: " + (status ? "Sucesso" : "Falha") + " | " +
+                "Tipo Transação: " + transactionType;
     }
 }
