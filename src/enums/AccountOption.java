@@ -5,6 +5,7 @@ public enum AccountOption {
     WITHDRAW("2", 'S', "Sacar"),
     TRANSFER("3", 'T', "Transferir"),
     CHECK_BALANCE("4", 'C', "Consultar Saldo"),
+    CHECK_EXTRACT("5", 'E', "Consultar Extrato"),
     EXIT("9", 'V', "Voltar");
 
     private final String number;

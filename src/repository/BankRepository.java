@@ -2,13 +2,12 @@ package repository;
 
 import data.DataWrapper;
 import data.DataPersistence;
+import enums.AccountOption;
 import enums.AccountTypeOption;
-import model.Account;
-import model.CurrentAccount;
-import model.SavingsAccount;
-import model.User;
+import model.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import java.util.Map;
 public class BankRepository {
     private final List<User> userList;
     private final List<Account> accountList;
+    private final List<TransactionHistory> transactionHistoryList;
     private int lastAccountNumber;
 
     public BankRepository() {
@@ -23,6 +23,7 @@ public class BankRepository {
 
         this.userList = dataWrapper.users();
         this.accountList = dataWrapper.accounts();
+        this.transactionHistoryList = dataWrapper.transactions();
 
         Object lastNumberObj = dataWrapper.config().get("lastAccountNumber");
         this.lastAccountNumber = (lastNumberObj instanceof Integer) ? (Integer) lastNumberObj : 1000;
@@ -30,7 +31,7 @@ public class BankRepository {
 
     private void saveData() {
         Map<String, Object> config = Map.of("lastAccountNumber", lastAccountNumber);
-        DataPersistence.save(new DataWrapper(userList, accountList, config));
+        DataPersistence.save(new DataWrapper(userList, accountList, transactionHistoryList, config));
     }
 
     public boolean createUser(User user) {
@@ -87,6 +88,27 @@ public class BankRepository {
         return null;
     }
 
+    public void createTransactionHistory(String accountNumber, AccountOption transactionType,
+                                         BigDecimal amount, boolean status) {
+
+        TransactionHistory transactionHistory = new TransactionHistory(
+                accountNumber, transactionType, amount, status
+        );
+
+        transactionHistoryList.add(transactionHistory);
+        saveData();
+    }
+
+    public List<TransactionHistory> getTransactionHistoryList(String accountNumber) {
+        List<TransactionHistory> transactionList = new ArrayList<>();
+        for (TransactionHistory transaction : transactionHistoryList) {
+            if (transaction.getAccountNumber().equals(accountNumber)) {
+                transactionList.add(transaction);
+            }
+        }
+        return transactionList;
+    }
+
     public boolean deposit(String accountNumber, BigDecimal amount) {
         Account account = getAccount(accountNumber);
         boolean result = false;
@@ -96,6 +118,8 @@ public class BankRepository {
 
             saveData();
         }
+
+        createTransactionHistory(accountNumber, AccountOption.DEPOSIT, amount, result);
         return result;
     }
 
@@ -107,6 +131,8 @@ public class BankRepository {
             result = account.withdrawal(amount);
             saveData();
         }
+
+        createTransactionHistory(accountNumber, AccountOption.WITHDRAW, amount, result);
         return result;
     }
 

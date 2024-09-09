@@ -17,7 +17,7 @@ public class DataPersistence {
     public static DataWrapper load() {
         File file = new File("database.ser");
         if (!file.exists()) {
-            return new DataWrapper(new ArrayList<>(), new ArrayList<>(), new HashMap<>());
+            return new DataWrapper(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new HashMap<>());
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
