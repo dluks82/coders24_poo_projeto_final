@@ -22,6 +22,14 @@ public abstract class Account implements Serializable {
         setPassword(password);
     }
 
+    public Account(String number, BigDecimal balance, String ownerId, String password) {
+        this.number = number;
+        this.balance = balance;
+        this.ownerId = ownerId;
+        setPassword(password);
+    }
+
+
     public String getNumber() {
         return number;
     }
